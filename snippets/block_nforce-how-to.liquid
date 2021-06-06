@@ -1,0 +1,216 @@
+{%- if block.settings.hero_layout == 'full_width' and block.settings.hero_size == 'adapt' -%}
+  {%- if block.settings.image.aspect_ratio == blank -%}
+    {%- assign min_aspect_ratio = 2.0 -%}
+  {%- else -%}
+    {%- assign min_aspect_ratio = block.settings.image.aspect_ratio -%}
+  {%- endif -%}
+  {%- assign wrapper_height = 100 | divided_by: min_aspect_ratio -%}
+
+  {%- style -%}
+    .hero-{{ block.id }} {
+      height: {{- wrapper_height -}}vw !important;
+    }
+  {%- endstyle -%}
+{%- endif -%}
+
+<style>
+  #block-{{ block.id }} .desktop-body p { color: {{ block.settings.color_body }}; }
+  
+  #block-{{ block.id }} .mobile-title,
+  #block-{{ block.id }} .mobile-body { display: none; }
+
+  @media only screen and (min-width : 990px) {
+    #block-{{ block.id }} .tab-label,  #block-{{ block.id }} .tab-label::after, #block-{{ block.id }} .tab-content p { color: #fff !important; }
+    #block-{{ block.id }} .tab-label { border-bottom-color: #fff !important; }
+  }
+
+  @media only screen and (min-width : 990px) {
+    #block-{{ block.id }} .hero__inner .page-width { max-width: 500px; margin: 0 auto; }
+  }
+  
+  #block-{{ block.id }} .background-image { background-position: {{ block.settings.background_image_position }}; }
+
+  /* Small Devices, Tablets DOWN */
+  @media only screen and (max-width : 990px) {
+    #block-{{ block.id }} .mobile-content { margin: 55px 0; }
+  	#block-{{ block.id }} .desktop-title,
+  	#block-{{ block.id }} .desktop-body { display: none; }
+    
+    #block-{{ block.id }} .mobile-title,
+  	#block-{{ block.id }} .mobile-body { display: block; }
+    
+  	#block-{{ block.id }} .mobile-body p { color: {{ block.settings.color_body_xs }}; }
+  
+    #block-{{ block.id }} .background-image { background-position: {{ block.settings.background_image_position_xs }}; }
+}
+</style>
+
+<div id="block-{{ block.id }}" data-block-id="{{ block.id }}" data-block-type="hero-section">
+  {%- if block.settings.hero_layout == 'fixed_width' -%}
+    <div class="page-width">
+  {%- endif -%}
+      
+  {%- if block.settings.hero_layout == 'fixed_width' and block.settings.hero_size ==  'adapt' -%}
+    {%- assign slide_width = 1090 -%}
+    {%- assign min_aspect_ratio = block.settings.image.aspect_ratio | default: 2.0 -%}
+    <div class="hero-fixed-width hero--adapt"
+         id="Hero-{{ block.id }}"
+         data-layout="{{ block.settings.hero_layout }}">
+      {%- assign img_url = block.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+      {%- if block.settings.image.width < max_width -%}
+        {%- assign slide_width = block.settings.image.width -%}
+      {%- endif -%}
+      <div class="hero-fixed-width__content">
+        <div class="page-width text-{{ block.settings.text_alignment }}">
+          {%- if block.settings.title != blank -%}
+            <h2 class="h1 mega-title{% if block.settings.text_size == 'large' %} mega-title--large{% endif %}">{{ block.settings.title | escape }}</h2>
+          {%- endif -%}
+          {%- if block.settings.text != blank -%}
+            <div class="rte-setting mega-subtitle{% if block.settings.text_size == 'large' %} mega-subtitle--large{% endif %}">{{ block.settings.text }}</div>
+          {%- endif -%}
+          {%- if block.settings.button_label != blank and block.settings.button_link != blank -%}
+            <a href="{{ block.settings.button_link }}" class="btn hero__btn">
+              {{ block.settings.button_label | escape }}
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+      {%- if block.settings.image != blank -%}
+        <img class="hero-fixed-width__image lazyload lazypreload"
+             src="{{ block.settings.image | img_url: '300x300' }}"
+             data-src="{{ img_url }}"
+             data-widths="[180, 360, 470, 600, 770, 970, 1060, 1280, 1512, 1728, 2048]"
+             data-aspectratio="{{ block.settings.image.aspect_ratio }}"
+             data-sizes="auto"
+             style="{%- if slide_width <= max_width -%}
+                      {%- assign min_width = slide_width | times: 100 | divided_by: max_width -%}
+                      min-width: {{ min_width }}%;
+                    {%- endif -%}
+                    object-position: {{ block.settings.alignment }};"
+             alt="{{ block.settings.image.alt | escape }}">
+      {%- else -%}
+        <span>
+          {% capture current %}{% cycle 1, 2 %}{% endcapture %}
+          {{ 'lifestyle-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+        </span>
+      {%- endif -%}
+      <noscript>
+        <div class="hero-fixed-width__image"{% if block.settings.image %}{% unless block.settings.image.alt == blank %} role="img" aria-label="{{ block.settings.image.alt | escape }}"{% endunless %} style="background-image: url('{{ block.settings.image | img_url: '2048x' }}'); background-position: center {{ block.settings.alignment }};"{% endif %}></div>
+      </noscript>
+    </div>
+  {%- else -%}
+    <div class="background-image hero hero--{{ block.settings.hero_size }} hero-{{ block.id }} box ratio-container lazyload js"
+         id="Hero-{{ block.id }}"
+         data-layout="{{ block.settings.hero_layout }}"
+         {%- if block.settings.image -%}
+          {% unless block.settings.image.alt == blank %}
+          role="img"
+          aria-label="{{ block.settings.image.alt | escape }}"
+          data-alt="{{ block.settings.image.alt | escape }}"
+          {% endunless %}
+         data-bg="{{ block.settings.image | img_url: '300x300' }}"
+         data-bgset="{% include 'bgset', image: block.settings.image %}"
+         data-sizes="auto"
+         data-parent-fit="cover"
+         style="background-image: url('{{ block.settings.image | img_url: '300x300' }});"
+         {%- endif -%}
+         >
+      
+    {%- if block.settings.image == blank -%}
+      <div class="placeholder-background">
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      </div>
+    {%- endif -%}
+      
+      <div class="hero__inner medium-down--hide">
+      <div class="large-up--one-half">
+        <div class="page-width text-{{ block.settings.text_alignment }}">
+        
+          {%- if block.settings.title != blank -%}
+          <div class="desktop-title">
+            <h1 class="{{ block.settings.title_size }}" style="color: {{ block.settings.color_title }}">{{ block.settings.title | escape }}</h1>
+          </div>
+          {%- endif -%}
+          
+          {%- if block.settings.text != blank -%}
+          <div class="desktop-body">
+            {{ block.settings.text }}
+          </div>
+          {%- endif -%}
+          
+          <div class="tabs">
+            <div class="tab">
+              <input type="radio" id="ht1" name="rd" checked>
+              <label class="tab-label" for="ht1">{{ block.settings.accordion_1_title | escape }}</label>
+              <div class="tab-content">
+                {{ block.settings.accordion_1_body }}
+              </div>
+            </div>
+            <div class="tab">
+              <input type="radio" id="ht2" name="rd">
+              <label class="tab-label" for="ht2">{{ block.settings.accordion_2_title | escape }}</label>
+              <div class="tab-content">
+                {{ block.settings.accordion_2_body }}
+              </div>
+            </div>
+            <div class="tab">
+              <input type="radio" id="ht3" name="rd">
+              <label class="tab-label" for="ht3">{{ block.settings.accordion_3_title | escape }}</label>
+              <div class="tab-content">
+                {{ block.settings.accordion_3_body }}
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    </div>
+      
+    <noscript>
+      <div class="hero hero--{{ block.settings.hero_size }}"{% if block.settings.image %}{% unless block.settings.image.alt == blank %} role="img" aria-label="{{ block.settings.image.alt | escape }}"{% endunless %} style="background-image: url('{{ block.settings.image | img_url: '2048x' }}'); background-position: center {{ block.settings.alignment }};"{% endif %}></div>
+    </noscript>
+  {%- endif -%}
+
+  <div class="page-width large-up--hide mobile-content">
+    {%- if block.settings.title_xs != blank -%}
+    <div class="mobile-title">
+      <h1 class="{{ block.settings.title_size_xs }}" style="color: {{ block.settings.color_title_xs }}">{{ block.settings.title_xs | escape }}</h1>
+    </div>
+    {%- endif -%}
+    
+    {%- if block.settings.text_xs != blank -%}
+    <div class="mobile-body">
+      {{ block.settings.text_xs }}
+    </div>
+    {%- endif -%}
+    
+    <div class="tabs">
+      <div class="tab">
+        <input type="radio" id="m1" name="rd" checked>
+        <label class="tab-label" for="m1">{{ block.settings.accordion_1_title | escape }}</label>
+        <div class="tab-content">
+          {{ block.settings.accordion_1_body }}
+        </div>
+      </div>
+      <div class="tab">
+        <input type="radio" id="m2" name="rd">
+        <label class="tab-label" for="m2">{{ block.settings.accordion_2_title | escape }}</label>
+        <div class="tab-content">
+          {{ block.settings.accordion_2_body }}
+        </div>
+      </div>
+      <div class="tab">
+        <input type="radio" id="m3" name="rd">
+        <label class="tab-label" for="m3">{{ block.settings.accordion_3_title | escape }}</label>
+        <div class="tab-content">
+          {{ block.settings.accordion_3_body }}
+        </div>
+      </div>
+    </div>
+  </div>
+      
+  {%- if block.settings.hero_layout == 'fixed_width' -%}
+    </div>
+  {%- endif -%}
+</div>

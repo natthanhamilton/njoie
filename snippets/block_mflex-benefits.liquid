@@ -1,0 +1,179 @@
+{%- assign desktop_alignment = 'flex-start' -%}
+{%- if block.settings.text_alignment == 'center' -%}{%- assign desktop_alignment = 'center' -%}{%- endif -%}
+{%- if block.settings.text_alignment == 'right' -%}{%- assign desktop_alignment = 'flex-end' -%}{%- endif -%}
+
+{%- assign image_container = 1 -%}
+{%- assign content_container = 0 -%}
+{%- if block.settings.image_alignment == 'right' -%}
+	{%- assign image_container = 1 -%}
+	{%- assign content_container = 0 -%}
+{%- endif -%}
+
+{% capture page_width %}
+{%- if block.settings.hero_layout == 'fixed_width' -%} page-width{%- endif -%}
+{% endcapture %}
+
+{%- assign image_grid_size = 'one-half' -%}
+{%- if block.settings.content_grid_size == 'quarter' -%}{%- assign image_grid_size = 'three-quarters' -%}{%- endif -%}
+{%- if block.settings.content_grid_size == 'third' -%}{%- assign image_grid_size = 'two-thirds' -%}{%- endif -%}
+
+{%- assign screen_size = 'large-up' -%}
+{%- if block.settings.content_grid_size == 'half' -%}{%- assign screen_size = 'large-up' -%}{%- endif -%}
+
+{% capture mobile_slideshow %}
+  <div class="slider">
+    {% for i in (1..5) %}
+	    {% assign imgVariable = 'slide_image_' | append: i %}
+	    {% assign title = 'slide_title_' | append: i %}
+	    {% assign size = 'slide_title_' | append: i | append: '_size' %}
+	    {% assign weight = 'slide_title_' | append: i | append: '_font_weight' %}
+	    {% assign color = 'slide_title_' | append: i | append: '_color' %}
+	    {% assign image = block.settings[imgVariable] %}
+
+      <div>
+        {% if image == blank %}
+          <div class="slideshow__image js">
+            <div class="placeholder-background">
+              {% capture current %}{% cycle 1, 2 %}{% endcapture %}
+              {{ 'lifestyle-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+            </div>
+          </div>
+        {% else %}
+        <div>
+          <img id="{{ img_id }}"
+                class="lazyload js"
+                src="{{ image | img_url: '3000x' }}"
+                alt="{{ image.alt | escape }}"
+                style="width: 100%;">
+          </div>
+        {% endif %}
+        
+        <noscript>
+          {% capture image_size %}{{ max_height }}x{% endcapture %}
+          {{ image | img_url: image_size, scale: 2, crop: 'top' | img_tag: image.alt, 'custom__image' }}
+        </noscript>
+      </div>
+
+    {% endfor %}
+  </div>
+{% endcapture %}
+
+<style>
+  #block-{{ block.id }} { background-color: {{ block.settings.color_bg }}; margin: {{ block.settings.top_bottom_margin }}rem 0; }
+
+  #block-{{ block.id }} .desktop-body p { color: {{ block.settings.color_body }}; }
+
+  #block-{{ block.id }} .mobile-title,
+  #block-{{ block.id }} .mobile-body { display: none; }
+  
+  #block-{{ block.id }} .image-container div { background-position: {{ block.settings.background_image_position }}; }
+
+  #block-{{ block.id }} .wrapper { 
+    display: flex; 
+    align-items: stretch; 
+    text-align: {{ block.settings.text_alignment }}; 
+  }
+
+  #block-{{ block.id }} .slick-dots {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    margin-bottom: 12px;
+  }
+
+  #block-{{ block.id }} .slick-dot-highlight { opacity: 50%; }
+  #block-{{ block.id }} .slick-dot-highlight.active { opacity: 100%; font-weight: bold; }
+  
+  @media only screen and (min-width : 990px) {
+    #block-{{ block.id }} .content-container {
+      display: flex;
+      align-items: stretch;
+    }
+  	#block-{{ block.id }} .content-container .page-width {
+      align-items: {{ desktop_alignment }};
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+  	#block-{{ block.id }} .image-container { order: {{ image_container }}; }
+  	#block-{{ block.id }} .content-container { order: {{ content_container }}; }
+  }
+  
+  /* Small Devices, Tablets DOWN */
+  @media only screen and (max-width : 990px) {
+    #block-{{ block.id }} { margin: {{ block.settings.top_bottom_margin_xs }}rem 0; }
+
+    #block-{{ block.id }} .wrapper { flex-direction: column;  }
+  	#block-{{ block.id }} .content-container {margin: 48px 0; text-align: {{ block.settings.text_alignment_xs }};  }
+    
+  	#block-{{ block.id }} .desktop-title,
+  	#block-{{ block.id }} .desktop-body { display: none; }
+    
+    #block-{{ block.id }} .mobile-title,
+  	#block-{{ block.id }} .mobile-body { display: block; }
+    
+  	#block-{{ block.id }} .mobile-body p { color: {{ block.settings.color_body_xs }}; }
+  
+    #block-{{ block.id }} .image-container div { background-position: {{ block.settings.background_image_position_xs }}; }
+  }
+</style>
+
+
+<div id="block-{{ block.id }}" data-block-id="{{ block.id }}" class="grid grid--no-gutters">
+  <div class="wrapper {{ page_width }} ">
+
+    <div class="grid__item {{ screen_size }}--one-{{ block.settings.content_grid_size }} content-container">
+      <div class="page-width" style="max-width: 466px;">
+        {%- if block.settings.title != blank -%}
+        <div class="desktop-title">
+          <h1 class="{{ block.settings.title_size }}" style="color: {{ block.settings.color_title }}; font-weight: {{ block.settings.title_font_weight }};">{{ block.settings.title | escape }}</h1>
+        </div>
+        {%- endif -%}
+        
+        {%- if block.settings.text != blank -%}
+        <div class="desktop-body">
+          {{ block.settings.text }}
+        </div>
+        {%- endif -%}
+        
+        {%- if block.settings.title_xs != blank -%}
+        <div class="mobile-title">
+          <h1 class="{{ block.settings.title_size_xs }}" style="color: {{ block.settings.color_title_xs }}; font-weight: {{ block.settings.title_font_weight_xs }};">{{ block.settings.title_xs | escape }}</h1>
+        </div>
+        {%- endif -%}
+
+        {%- if block.settings.text_xs != blank -%}
+        <div class="mobile-body">
+          {{ block.settings.text_xs }}
+        </div>
+        {%- endif -%}
+
+        <div class="slider-dots-wrapper" style="display: flex; flex-direction: row; width: 100%; justify-content: space-between; margin-top: 30px;">
+          {% for i in (1..5) %}
+            {% assign title = 'slide_title_' | append: i %}
+            {% assign size = 'slide_title_' | append: i | append: '_size' %}
+            {% assign weight = 'slide_title_' | append: i | append: '_font_weight' %}
+            {% assign color = 'slide_title_' | append: i | append: '_color' %}
+
+            {%- if block.settings[title] != blank -%}
+              <h1 data-slide="{{ i }}" class="{{ block.settings[size] }} text-center slick-dot-highlight dot-number-{{ i }} {% if i == 1 %}active{% endif %}" style="color: {{ block.settings[color] }}; margin: 12px 0;">{{ block.settings[title] | escape }}</h1>
+            {%- endif -%}
+          {% endfor %}
+        </div>
+      </div>
+  	</div>
+      
+    <div class="grid__item {{ screen_size }}--{{ image_grid_size }} js image-container">
+      {{ mobile_slideshow }}
+    </div>
+
+    <noscript>
+      <div class="grid__item medium-up--one-half">
+        <div class="image-bar__item image-bar__item--{{ block.id }}" style="background-image: url({{ block.settings.image | img_url: '2048x' }});"></div>
+      </div>
+    </noscript>
+
+    </div>
+</div>

@@ -1,0 +1,107 @@
+<style>
+  #block-{{ block.id }} .desktop-body p { color: {{ block.settings.color_body }}; }
+  #block-{{ block.id }} .mobile { display: none; }
+
+  
+  /* Small Devices, Tablets DOWN */
+  @media only screen and (max-width : 768px) {
+    #block-{{ block.id }} .mobile { display: block; }
+    #block-{{ block.id }} .desktop { display: none; }
+  }
+</style>
+
+{% assign blockTotal = 2 %}
+{% assign gridSize = 'large-up--one-half' %}
+
+{% if block.settings.section_3_image != blank %}
+  {% assign blockTotal = 3 %}
+  {% assign gridSize = 'large-up--one-third' %}
+{% endif %}
+{% if block.settings.section_4_image != blank %}
+  {% assign blockTotal = 4 %}
+  {% assign gridSize = 'large-up--one-quarter' %}
+{% endif %}
+
+<div id="block-{{ block.id }}" data-block-id="{{ block.id }}" data-block-type="hero-section" style="margin: 30px 0;">
+  <div class="grid">
+  {% for i in (1..blockTotal) %}
+    {% assign image = 'section_' | append: i | append: '_image' %}
+    {% assign title = 'section_' | append: i | append: '_title' %}
+    {% assign size = 'section_' | append: i | append: '_title_size' %}
+    {% assign weight = 'section_' | append: i | append: '_title_font_weight' %}
+    {% assign color = 'section_' | append: i | append: '_title_color' %}
+    {% assign body = 'section_' | append: i | append: '_body' %}
+    {% assign bodyColor = 'section_' | append: i | append: '_body_color' %}
+    
+    <div class="grid__item d  {{ gridSize }}">
+    <div class="hero hero--{{ block.settings.hero_size }} hero-{{ block.id }} box ratio-container lazyload js"
+          id="Hero-{{ block.id }}"
+          data-layout="{{ block.settings.hero_layout }}"
+          {%- if block.settings[image] -%}
+          {% unless block.settings[image].alt == blank %}
+          role="img"
+          aria-label="{{ block.settings[image].alt | escape }}"
+          data-alt="{{ block.settings[image].alt | escape }}"
+          {% endunless %}
+          data-bg="{{ block.settings[image] | img_url: '300x300' }}"
+          data-bgset="{% include 'bgset', image: block.settings[image] %}"
+          data-sizes="auto"
+          data-parent-fit="cover"
+          style="background-position: 50% 30%; background-image: url('{{ block.settings[image] | img_url: '300x300' }});"
+          {%- endif -%}
+          >
+        
+      {%- if block.settings[image] == blank -%}
+        <div class="placeholder-background">
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        </div>
+      {%- endif -%}
+        
+        <div class="hero__inner" style="vertical-align: inherit; padding-top: 35px;">
+          <div class="page-width text-{{ block.settings.text_alignment }}" style="margin: 0; max-width: 455px;">
+            <div class="desktop">
+              {%- if block.settings[title] != blank -%}
+              <div class="desktop-title">
+                <h1 class="{{ block.settings[size] }}" style="color: {{ block.settings[color] }}">{{ block.settings[title] | escape }}</h1>
+              </div>
+              {%- endif -%}
+
+              <style>
+                #block-{{ block.id }} .desktop-body.section-{{ i }} p { color: {{ block.settings[bodyColor] }}; }
+              </style>
+              {%- if block.settings[body] != blank -%}
+              <div class="desktop-body section-{{ i }}">
+                {{ block.settings[body] }}
+              </div>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+      </div>
+        
+      <noscript>
+        <div class="hero hero--{{ block.settings.hero_size }}"{% if block.settings.image %}{% unless block.settings.image.alt == blank %} role="img" aria-label="{{ block.settings.image.alt | escape }}"{% endunless %} style="background-image: url('{{ block.settings.image | img_url: '2048x' }}'); background-position: center {{ block.settings.alignment }};"{% endif %}></div>
+      </noscript>
+    </div>
+
+    <div class="mobile grid__item one-whole">
+      <div class="page-width" style="padding-top: 48px; padding-bottom: 48px;">
+        {%- if block.settings[title] != blank -%}
+        <div class="desktop-title">
+          <h1 class="{{ block.settings[size] }}" style="color: {{ block.settings[color] }}">{{ block.settings[title] | escape }}</h1>
+        </div>
+        {%- endif -%}
+
+        <style>
+          #block-{{ block.id }} .desktop-body.section-{{ i }} p { color: {{ block.settings[bodyColor] }}; }
+        </style>
+        {%- if block.settings[body] != blank -%}
+        <div class="desktop-body section-{{ i }}">
+          {{ block.settings[body] }}
+        </div>
+        {%- endif -%}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>

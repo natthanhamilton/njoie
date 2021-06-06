@@ -1,0 +1,11 @@
+{% comment %}
+  The contents of the blog.liquid template can be found in /sections/blog-template.liquid
+{% endcomment %}
+
+<div style="margin: 4rem 0;">
+{% if blog.handle == 'videos' %}
+  {% section 'videos-template' %}
+{% else %}
+  {% section 'blog-template' %}
+{% endif %}
+</div>

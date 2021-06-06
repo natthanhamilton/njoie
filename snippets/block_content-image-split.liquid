@@ -1,0 +1,266 @@
+{%- assign desktop_alignment = 'flex-start' -%}
+{%- if block.settings.text_alignment == 'center' -%}{%- assign desktop_alignment = 'center' -%}{%- endif -%}
+{%- if block.settings.text_alignment == 'right' -%}{%- assign desktop_alignment = 'flex-end' -%}{%- endif -%}
+
+{%- assign image_container = 0 -%}
+{%- assign content_container = 1 -%}
+{%- if block.settings.image_alignment == 'right' -%}
+	{%- assign image_container = 1 -%}
+	{%- assign content_container = 0 -%}
+{%- endif -%}
+
+{% capture page_width %}
+{%- if block.settings.hero_layout == 'fixed_width' -%} page-width{%- endif -%}
+{% endcapture %}
+
+{%- assign image_grid_size = 'one-half' -%}
+{%- if block.settings.content_grid_size == 'quarter' -%}{%- assign image_grid_size = 'three-quarters' -%}{%- endif -%}
+{%- if block.settings.content_grid_size == 'third' -%}{%- assign image_grid_size = 'two-thirds' -%}{%- endif -%}
+
+{%- assign screen_size = 'large-up' -%}
+{%- if block.settings.content_grid_size == 'half' -%}{%- assign screen_size = 'large-up' -%}{%- endif -%}
+
+<style>
+  #block-{{ block.id }} { background-color: {{ block.settings.color_bg }}; margin: {{ block.settings.top_bottom_margin }}rem 0; }
+
+  #block-{{ block.id }} .desktop-body,
+  #block-{{ block.id }} .desktop-body p 
+  { color: {{ block.settings.color_body }}; }
+
+  #block-{{ block.id }} .mobile-title,
+  #block-{{ block.id }} .mobile-subtitle,
+  #block-{{ block.id }} .mobile-body { display: none; }
+
+  #block-{{ block.id }} .ratio-container { height: 100%; }
+
+  #block-{{ block.id }} .icons { margin-top: 35px; width: 100%; }
+  #block-{{ block.id }} .icons div { text-align: center; }
+  #block-{{ block.id }} .icons img { max-height: 100px; }
+
+  #block-{{ block.id }} .inner-content-container { max-width: {{ block.settings.content_max_width }}{% if block.settings.content_max_width != 'none' %}px{% endif %}; }
+
+  @media only screen and (min-width : 990px) {
+  	#block-{{ block.id }} .wrapper { display: flex; align-items: stretch; text-align: {{ block.settings.text_alignment }}; }
+  	#block-{{ block.id }} .content-container .page-width {
+      align-items: {{ desktop_alignment }};
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    
+  	#block-{{ block.id }} .image-container { 
+      order: {{ image_container }}; 
+      display: flex;
+      align-items: center; 
+    }
+
+    #block-{{ block.id }} .image-container img { 
+      width: auto;
+      margin: auto;
+      max-height: 100%;
+    }
+  	#block-{{ block.id }} .content-container { order: {{ content_container }}; }
+    
+  }
+  
+  /* Small Devices, Tablets DOWN */
+  @media only screen and (max-width : 990px) {
+    #block-{{ block.id }} { margin: {{ block.settings.top_bottom_margin_xs }}rem 0; }
+
+  	#block-{{ block.id }} .content-container { margin: 48px 0;  }
+
+    {% if block.settings.isBackground %} 
+  	#block-{{ block.id }} .image-container { height: initial !important; }
+    {% endif %}
+    
+  	#block-{{ block.id }} .desktop-title,
+  	#block-{{ block.id }} .desktop-subtitle,
+  	#block-{{ block.id }} .desktop-body { display: none; }
+    
+    #block-{{ block.id }} .mobile-title,
+    #block-{{ block.id }} .mobile-subtitle,
+  	#block-{{ block.id }} .mobile-body { display: block; }
+    
+    #block-{{ block.id }} .mobile-title { text-align: center; }
+  	#block-{{ block.id }} .mobile-body p { color: {{ block.settings.color_body_xs }}; text-align: {{ block.settings.text_alignment_xs }}; }
+
+    #block-{{ block.id }} .inner-content-container { max-width: {{ block.settings.content_max_width_xs }}{% if block.settings.content_max_width_xs != 'none' %}px{% endif %}; }
+
+    {% unless block.settings.isBackground %} #block-{{ block.id }} .image-container { height: initial !important; } {% endunless %}
+  }
+</style>
+
+{% capture icons %}
+  {%- if block.settings.icon_1 != blank -%} 
+  <div class="icons grid grid--no-gutters">
+  {%- endif -%}
+
+    {%- if block.settings.icon_1 != blank -%}
+      <div class="grid__item one-third">
+        <img id="{{ img_id }}"
+              class="lazyload js"
+              src="{{ block.settings.icon_1 | img_url: '2000x' }}"
+              data-src="{{ img_url }}"
+              data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+              data-aspectratio="{{ block.settings.icon_1.aspect_ratio }}"
+              data-sizes="auto"
+              alt="{{ block.settings.icon_1.alt | escape }}">
+      </div>
+    {%- endif -%}
+
+    {%- if block.settings.icon_2 != blank -%}
+      <div class="grid__item one-third">
+        <img id="{{ img_id }}"
+              class="lazyload js"
+              src="{{ block.settings.icon_2 | img_url: '2000x' }}"
+              data-src="{{ img_url }}"
+              data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+              data-aspectratio="{{ block.settings.icon_2.aspect_ratio }}"
+              data-sizes="auto"
+              alt="{{ block.settings.icon_2.alt | escape }}">
+      </div>
+    {%- endif -%}
+
+    {%- if block.settings.icon_3 != blank -%}
+      <div class="grid__item one-third">
+        <img id="{{ img_id }}"
+              class="lazyload js"
+              src="{{ block.settings.icon_3 | img_url: '2000x' }}"
+              data-src="{{ img_url }}"
+              data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+              data-aspectratio="{{ block.settings.icon_3.aspect_ratio }}"
+              data-sizes="auto"
+              alt="{{ block.settings.icon_3.alt | escape }}">
+      </div>
+    {%- endif -%}
+
+  {%- if block.settings.icon_1 != blank -%} 
+  </div>
+  {%- endif -%}
+{% endcapture %}
+
+<div id="block-{{ block.id }}" data-block-id="{{ block.id }}" class="grid grid--no-gutters">
+  <div class="wrapper {{ page_width }} ">
+
+    <div class="grid__item {{ screen_size }}--{{ image_grid_size }} js image-container hero--{{ block.settings.hero_size }} hero-{{ block.id }}">
+      {% if block.settings.image != blank %}
+        {% if block.settings.isBackground %}
+          <div class="image-bar__item image-bar__item--{{ block.id }} box ratio-container lazyload"
+              data-bgset="{% include 'bgset', image: block.settings.image %}"
+              data-sizes="auto"
+              data-parent-fit="cover"
+              style="background-position: {{ block.settings.alignment }}; background-image: url('{{ block.settings.image | img_url: '300x300' }});">
+          </div>
+        {% else %}
+          <img id="{{ img_id }}"
+                class="lazyload js"
+                src="{{ block.settings.image | img_url: '2000x' }}"
+                data-src="{{ img_url }}"
+                data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+                data-aspectratio="{{ block.settings.image.aspect_ratio }}"
+                data-sizes="auto"
+                alt="{{ block.settings.image.alt | escape }}">
+        {% endif %}
+      {% endif %}
+    </div>
+  
+    <div class="grid__item {{ screen_size }}--one-{{ block.settings.content_grid_size }} content-container">
+      <div class="page-width inner-content-container">
+
+          {%- if block.settings.image_top != blank -%}
+            <div style="width: 100%; margin: 1rem 0; text-align: {{ block.settings.image_top_alignment }};">
+              <img id="{{ img_id }}"
+                    style="max-height: {{ block.settings.image_top_max_height }}rem;"
+                    class="lazyload js"
+                    src="{{ block.settings.image_top | img_url: '2000x' }}"
+                    data-src="{{ img_url }}"
+                    data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+                    data-aspectratio="{{ block.settings.image_top.aspect_ratio }}"
+                    data-sizes="auto"
+                    alt="{{ block.settings.image_top.alt | escape }}">
+              </div>
+          {%- endif -%}
+
+          {%- if block.settings.title != blank -%}
+          <div class="desktop-title">
+            <h1 class="{{ block.settings.title_size }}" style="color: {{ block.settings.color_title }}; font-weight: {{ block.settings.title_font_weight }};">{{ block.settings.title | escape }}</h1>
+          </div>
+          {%- endif -%}
+          
+          {%- if block.settings.title_xs != blank -%}
+          <div class="mobile-title">
+            <h1 class="{{ block.settings.title_size_xs }}" style="color: {{ block.settings.color_title_xs }}; font-weight: {{ block.settings.title_font_weight_xs }};">{{ block.settings.title_xs | escape }}</h1>
+          </div>
+          {%- endif -%}
+
+          {%- if block.settings.subtitle != blank -%}
+          <div class="desktop-subtitle">
+            <h1 class="{{ block.settings.subtitle_size }}" style="color: {{ block.settings.color_subtitle }}; font-weight: {{ block.settings.subtitle_font_weight }};">{{ block.settings.subtitle | escape }}</h1>
+          </div>
+          {%- endif -%}
+          
+          {%- if block.settings.subtitle_xs != blank -%}
+          <div class="mobile-subtitle">
+            <h1 class="{{ block.settings.subtitle_size_xs }}" style="color: {{ block.settings.color_subtitle_xs }}; font-weight: {{ block.settings.subtitle_font_weight_xs }};">{{ block.settings.subtitle_xs | escape }}</h1>
+          </div>
+          {%- endif -%}
+          
+          {%- if block.settings.image_middle != blank -%}
+            <div style="width: 100%; margin: 1rem 0; text-align: {{ block.settings.image_top_alignment }};">
+              <img id="{{ img_id }}"
+                    style="max-height: {{ block.settings.image_middle_max_height }}rem;"
+                    class="lazyload js"
+                    src="{{ block.settings.image_middle | img_url: '2000x' }}"
+                    data-src="{{ img_url }}"
+                    data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+                    data-aspectratio="{{ block.settings.image_middle.aspect_ratio }}"
+                    data-sizes="auto"
+                    alt="{{ block.settings.image_middle.alt | escape }}">
+            </div>
+          {%- endif -%}
+
+          {%- if block.settings.text != blank -%}
+          <div class="desktop-body">
+          	{{ block.settings.text }}
+          </div>
+          {%- endif -%}
+          
+          {%- if block.settings.text_xs != blank -%}
+          <div class="mobile-body">
+          	{{ block.settings.text_xs }}
+          </div>
+          {%- endif -%}
+          
+          {%- if block.settings.button_label != blank and block.settings.button_link != blank -%}
+            {%- capture ariaLabel -%}
+              {{- block.settings.button_label -}}
+              {%- if block.settings.button_link.type == 'frontpage_link' -%}
+                : {{ 'homepage.general.title' | t -}}
+              {%- elsif block.settings.button_link.type == 'catalog_link' -%}
+                : {{ 'collections.catalog.title' | t -}}
+              {%- elsif block.settings.button_link.object.title -%}
+                : {{ block.settings.button_link.object.title -}}
+              {%- endif -%}
+            {%- endcapture -%}
+
+            <a href="{{ block.settings.button_link }}"
+              class="btn hero__btn"
+              aria-label="{{ ariaLabel }}">
+              {{- block.settings.button_label | escape -}}
+            </a>
+          {%- endif -%}
+
+          {{ icons }}
+
+      </div>
+  	</div>
+      
+    <noscript>
+      <div class="grid__item medium-up--one-half">
+        <div class="image-bar__item image-bar__item--{{ block.id }}" style="background-image: url({{ block.settings.image | img_url: '2048x' }});"></div>
+      </div>
+    </noscript>
+
+    </div>
+</div>

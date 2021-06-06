@@ -1,0 +1,359 @@
+<style>
+  #section-{{ section.id }} { background-color: {{ section.settings.color_bg }}; padding-top: 80px; padding-bottom: 80px; }
+  
+  #section-{{ section.id }} .desktop-body { padding-top: 30px; }
+  #section-{{ section.id }} .desktop-body p { color: {{ section.settings.color_body }}; line-height: 30px; }
+
+  #section-{{ section.id }} .mobile-title,
+  #section-{{ section.id }} .mobile-body { display: none; }
+
+	#section-{{ section.id }} .page-width { 
+		text-align: {{ section.settings.text_alignment }};
+		max-width: {{ section.settings.content_max_width }}{% if section.settings.content_max_width != 'none' %}px{% endif %}; 
+		}
+
+  @media only screen and (min-width : 768px) {
+  }
+  
+  /* Small Devices, Tablets DOWN */
+  @media only screen and (max-width : 768px) {
+  	#section-{{ section.id }} .desktop-title,
+  	#section-{{ section.id }} .desktop-body { display: none; }
+    
+    #section-{{ section.id }} .mobile-title,
+  	#section-{{ section.id }} .mobile-body { display: block; }
+    
+  	#section-{{ section.id }} .mobile-body p { color: {{ section.settings.color_body_xs }}; }
+	
+	#section-{{ section.id }} .page-width { 
+		text-align: {{ section.settings.text_alignment_xs }};
+		max-width: {{ section.settings.content_max_width_xs }}{% if section.settings.content_max_width != 'none' %}px{% endif %}; 
+		}
+  }
+</style>
+
+<div id="section-{{ section.id }}" data-section-id="{{ section.id }}" class="grid">
+
+    <div class="grid__item">
+      <div class="page-width">
+          {%- if section.settings.title != blank -%}
+          <div class="desktop-title text-center">
+            <h1 class="{{ section.settings.title_size }}" style="color: {{ section.settings.color_title }}">{{ section.settings.title | escape }}</h1>
+          </div>
+          {%- endif -%}
+          
+          {%- if section.settings.title_xs != blank -%}
+          <div class="mobile-title text-center">
+            <h1 class="{{ section.settings.title_size_xs }}" style="color: {{ section.settings.color_title_xs }}">{{ section.settings.title_xs | escape }}</h1>
+          </div>
+          {%- endif -%}
+        
+          {%- if section.settings.subtitle != blank -%}
+          <div class="desktop-title text-center">
+            <h1 class="{{ section.settings.subtitle_size }}" style="color: {{ section.settings.color_subtitle }}">{{ section.settings.subtitle | escape }}</h1>
+          </div>
+          {%- endif -%}
+          
+          {%- if section.settings.subtitle_xs != blank -%}
+          <div class="mobile-title text-center">
+            <h1 class="{{ section.settings.subtitle_size_xs }}" style="color: {{ section.settings.color_subtitle_xs }}">{{ section.settings.subtitle_xs | escape }}</h1>
+          </div>
+          {%- endif -%}
+          
+          {%- if section.settings.text != blank -%}
+          <div class="desktop-body">
+          	{{ section.settings.text }}
+          </div>
+          {%- endif -%}
+          
+          {%- if section.settings.text_xs != blank -%}
+          <div class="mobile-body">
+          	{{ section.settings.text_xs }}
+          </div>
+          {%- endif -%}
+      </div>
+  	</div>
+      
+    <noscript>
+      <div class="grid__item medium-up--one-half">
+        <div class="image-bar__item image-bar__item--{{ section.id }}" style="background-image: url({{ section.settings.image | img_url: '2048x' }});"></div>
+      </div>
+    </noscript>
+</div>
+  
+{% schema %}
+{
+	"name": "Our Story",
+	"settings": [
+		{
+			"type": "header",
+			"content": "Content"
+		},
+		{
+			"type": "color",
+			"id": "color_bg",
+			"label": "Background Color"
+		},
+		{
+			"type": "header",
+			"content": "Desktop Settings"
+		},
+		{
+			"type": "text",
+			"id": "content_max_width",
+			"label": "Content Max Width",
+			"default": "none"
+		},
+		{
+			"type": "select",
+			"id": "text_alignment",
+			"label": "Text Alignment",
+			"default": "left",
+			"options": [
+				{
+					"label": "left",
+					"value": "left"
+				},
+				{
+					"label": "center",
+					"value": "center"
+				},
+				{
+					"label": "right",
+					"value": "right"
+				}
+			]
+		},
+		{
+			"type": "select",
+			"id": "title_size",
+			"label": "Title Size",
+			"default": "h1",
+			"options": [
+				{
+					"label": "h1",
+					"value": "h1"
+				},
+				{
+					"label": "h2",
+					"value": "h2"
+				},
+				{
+					"label": "h3",
+					"value": "h3"
+				},
+				{
+					"label": "h4",
+					"value": "h4"
+				},
+				{
+					"label": "h5",
+					"value": "h5"
+				},
+				{
+					"label": "h6",
+					"value": "h6"
+				}
+			]
+		},
+		{
+			"type": "text",
+			"id": "title",
+			"label": "Heading",
+			"default": "DESKTOP TITLE"
+		},
+		{
+			"type": "color",
+			"id": "color_title",
+			"label": "Title Color"
+		},
+		{
+			"type": "select",
+			"id": "subtitle_size",
+			"label": "Subtitle Size",
+			"default": "h4",
+			"options": [
+				{
+					"label": "h1",
+					"value": "h1"
+				},
+				{
+					"label": "h2",
+					"value": "h2"
+				},
+				{
+					"label": "h3",
+					"value": "h3"
+				},
+				{
+					"label": "h4",
+					"value": "h4"
+				},
+				{
+					"label": "h5",
+					"value": "h5"
+				},
+				{
+					"label": "h6",
+					"value": "h6"
+				}
+			]
+		},
+		{
+			"type": "text",
+			"id": "subtitle",
+			"label": "Sub Title",
+			"default": "SUB TITLE"
+		},
+		{
+			"type": "color",
+			"id": "color_subtitle",
+			"label": "Title Color"
+		},
+		{
+			"type": "textarea",
+			"id": "text",
+			"label": "Text",
+			"default": "<p>DESKTOP BODY</p>"
+		},
+		{
+			"type": "color",
+			"id": "color_body",
+			"label": "Body Color"
+		},
+		{
+			"type": "header",
+			"content": "Mobile Settings"
+		},
+		{
+			"type": "text",
+			"id": "content_max_width_xs",
+			"label": "Content Max Width",
+			"default": "none"
+		},
+		{
+			"type": "select",
+			"id": "text_alignment_xs",
+			"label": "Text Alignment",
+			"default": "center",
+			"options": [
+				{
+					"label": "left",
+					"value": "left"
+				},
+				{
+					"label": "center",
+					"value": "center"
+				},
+				{
+					"label": "right",
+					"value": "right"
+				}
+			]
+		},
+		{
+			"type": "select",
+			"id": "title_size_xs",
+			"label": "Title Size",
+			"default": "h1",
+			"options": [
+				{
+					"label": "h1",
+					"value": "h1"
+				},
+				{
+					"label": "h2",
+					"value": "h2"
+				},
+				{
+					"label": "h3",
+					"value": "h3"
+				},
+				{
+					"label": "h4",
+					"value": "h4"
+				},
+				{
+					"label": "h5",
+					"value": "h5"
+				},
+				{
+					"label": "h6",
+					"value": "h6"
+				}
+			]
+		},
+		{
+			"type": "text",
+			"id": "title_xs",
+			"label": "Heading",
+			"default": "MOBILE TITLE"
+		},
+		{
+			"type": "color",
+			"id": "color_title_xs",
+			"label": "Title Color"
+		},
+		{
+			"type": "select",
+			"id": "subtitle_size_xs",
+			"label": "Subtitle Size",
+			"default": "h5",
+			"options": [
+				{
+					"label": "h1",
+					"value": "h1"
+				},
+				{
+					"label": "h2",
+					"value": "h2"
+				},
+				{
+					"label": "h3",
+					"value": "h3"
+				},
+				{
+					"label": "h4",
+					"value": "h4"
+				},
+				{
+					"label": "h5",
+					"value": "h5"
+				},
+				{
+					"label": "h6",
+					"value": "h6"
+				}
+			]
+		},
+		{
+			"type": "text",
+			"id": "subtitle_xs",
+			"label": "Sub Title",
+			"default": "MOBILE SUB TITLE"
+		},
+		{
+			"type": "color",
+			"id": "color_subtitle_xs",
+			"label": "Subtitle Color"
+		},
+		{
+			"type": "textarea",
+			"id": "text_xs",
+			"label": "Text",
+			"default": "<p>MOBILE BODY</p>"
+		},
+		{
+			"type": "color",
+			"id": "color_body_xs",
+			"label": "Body Color"
+		}
+	],
+	"presets": [
+		{
+			"name": "Our Story",
+			"category": "Brand"
+		}
+	]
+}
+{% endschema %}

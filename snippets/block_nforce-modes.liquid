@@ -1,0 +1,267 @@
+{%- if block.settings.hero_layout == 'full_width' and block.settings.hero_size == 'adapt' -%}
+  {%- if block.settings.image.aspect_ratio == blank -%}
+    {%- assign min_aspect_ratio = 2.0 -%}
+  {%- else -%}
+    {%- assign min_aspect_ratio = block.settings.image.aspect_ratio -%}
+  {%- endif -%}
+  {%- assign wrapper_height = 100 | divided_by: min_aspect_ratio -%}
+
+  {%- style -%}
+    .hero-{{ block.id }} {
+      height: {{- wrapper_height -}}vw !important;
+    }
+  {%- endstyle -%}
+{%- endif -%}
+
+{%- assign desktop_alignment = 'flex-start' -%}
+{%- if block.settings.text_alignment == 'center' -%}{%- assign desktop_alignment = 'center' -%}{%- endif -%}
+{%- if block.settings.text_alignment == 'right' -%}{%- assign desktop_alignment = 'flex-end' -%}{%- endif -%}
+
+{%- assign image_container = 0 -%}
+{%- assign content_container = 1 -%}
+{%- if block.settings.image_alignment == 'right' -%}
+	{%- assign image_container = 1 -%}
+	{%- assign content_container = 0 -%}
+{%- endif -%}
+
+{% capture page_width %}
+{%- if block.settings.hero_layout == 'fixed_width' -%} page-width{%- endif -%}
+{% endcapture %}
+
+{%- assign image_grid_size = 'one-half' -%}
+{%- if block.settings.content_grid_size == 'quarter' -%}{%- assign image_grid_size = 'three-quarters' -%}{%- endif -%}
+{%- if block.settings.content_grid_size == 'third' -%}{%- assign image_grid_size = 'two-thirds' -%}{%- endif -%}
+
+{%- assign screen_size = 'large-up' -%}
+{%- if block.settings.content_grid_size == 'half' -%}{%- assign screen_size = 'large-up' -%}{%- endif -%}
+
+{% capture mobile_slideshow %}
+  <div class="mobile-slider">
+    <!-- image 1 -->
+    <div>
+      {% if block.settings.slide_image_1 == blank %}
+        <div class="slideshow__image js">
+          <div class="placeholder-background">
+            {% capture current %}{% cycle 1, 2 %}{% endcapture %}
+            {{ 'lifestyle-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+          </div>
+        </div>
+      {% else %}
+        <img id="{{ img_id }}"
+              class="lazyload js"
+              src="{{ block.settings.slide_image_1 | img_url: '2000x' }}"
+              data-src="{{ img_url }}"
+              data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+              data-aspectratio="{{ block.settings.slide_image_1.aspect_ratio }}"
+              data-sizes="auto"
+              alt="{{ block.settings.slide_image_1.alt | escape }}">
+      {% endif %}
+
+      {% if block.settings.slide_title_1 != blank %}
+        <h1 class="{{ block.settings.slide_title_1_size }}" style="color: {{ block.settings.slide_title_1_color }}; font-weight: {{ block.settings.slide_title_1_font_weight }};">{{ block.settings.slide_title_1 | escape }}</h1>
+      {% endif %}
+
+      <noscript>
+        {% capture image_size %}{{ max_height }}x{% endcapture %}
+        {{ block.settings.slide_image_1 | img_url: image_size, scale: 2, crop: 'top' | img_tag: block.settings.slide_image_1.alt, 'custom__image' }}
+      </noscript>
+    </div>
+
+    <!-- image 2 -->
+    <div>
+      {% if block.settings.slide_image_2 == blank %}
+        <div class="slideshow__image js">
+          <div class="placeholder-background">
+            {% capture current %}{% cycle 1, 2 %}{% endcapture %}
+            {{ 'lifestyle-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+          </div>
+        </div>
+      {% else %}
+        <img id="{{ img_id }}"
+              class="lazyload js"
+              src="{{ block.settings.slide_image_2 | img_url: '2000x' }}"
+              data-src="{{ img_url }}"
+              data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+              data-aspectratio="{{ block.settings.slide_image_2.aspect_ratio }}"
+              data-sizes="auto"
+              alt="{{ block.settings.slide_image_2.alt | escape }}">
+      {% endif %}
+
+      {% if block.settings.slide_title_2 != blank %}
+        <h1 class="{{ block.settings.slide_title_2_size }}" style="color: {{ block.settings.slide_title_2_color }}; font-weight: {{ block.settings.slide_title_2_font_weight }};">{{ block.settings.slide_title_2 | escape }}</h1>
+      {% endif %}
+
+      <noscript>
+        {% capture image_size %}{{ max_height }}x{% endcapture %}
+        {{ block.settings.slide_image_2 | img_url: image_size, scale: 2, crop: 'top' | img_tag: block.settings.slide_image_2.alt, 'custom__image' }}
+      </noscript>
+    </div>
+
+    <!-- image 3 -->
+    <div>
+      {% if block.settings.slide_image_3 == blank %}
+        <div class="slideshow__image js">
+          <div class="placeholder-background">
+            {% capture current %}{% cycle 1, 2 %}{% endcapture %}
+            {{ 'lifestyle-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+          </div>
+        </div>
+      {% else %}
+        <img id="{{ img_id }}"
+              class="lazyload js"
+              src="{{ block.settings.slide_image_3 | img_url: '2000x' }}"
+              data-src="{{ img_url }}"
+              data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+              data-aspectratio="{{ block.settings.slide_image_3.aspect_ratio }}"
+              data-sizes="auto"
+              alt="{{ block.settings.slide_image_3.alt | escape }}">
+      {% endif %}
+
+      {% if block.settings.slide_title_3 != blank %}
+        <h1 class="{{ block.settings.slide_title_3_size }}" style="color: {{ block.settings.slide_title_3_color }}; font-weight: {{ block.settings.slide_title_3_font_weight }};">{{ block.settings.slide_title_3 | escape }}</h1>
+      {% endif %}
+
+      <noscript>
+        {% capture image_size %}{{ max_height }}x{% endcapture %}
+        {{ block.settings.slide_image_3 | img_url: image_size, scale: 2, crop: 'top' | img_tag: block.settings.slide_image_3.alt, 'custom__image' }}
+      </noscript>
+    </div>
+  </div>
+{% endcapture %}
+
+<style>
+  #block-{{ block.id }} { background-color: {{ block.settings.color_bg }}; margin: {{ block.settings.top_bottom_margin }}rem 0; }
+
+  #block-{{ block.id }} .desktop-body p { color: {{ block.settings.color_body }}; }
+
+  #block-{{ block.id }} .mobile-title,
+  #block-{{ block.id }} .mobile-body { display: none; }
+
+  #block-{{ block.id }} .ratio-container { height: 100%; }
+
+  #block-{{ block.id }} .icon {
+    width: auto;
+    height: 50px;
+    filter: brightness(1000%);
+    display: block;
+  }
+  #block-{{ block.id }} .icon:hover { filter: none; cursor: pointer; }
+  #block-{{ block.id }} .icon:not(:first-child) { margin-top: 40px; }
+  #block-{{ block.id }} .icon.active { filter: none; }
+  #block-{{ block.id }} .current-icon img { max-height: 400px; }
+  #block-{{ block.id }} .icon-selection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #block-{{ block.id }} .svg-container { display: none; }
+  
+  #block-{{ block.id }} .image-container div { background-position: {{ block.settings.background_image_position }}; }
+
+  @media only screen and (min-width : 990px) {
+  	#block-{{ block.id }} .wrapper { 
+      display: flex; 
+      align-items: stretch; 
+      text-align: {{ block.settings.text_alignment }}; 
+    }
+    #block-{{ block.id }} .content-container {
+      display: flex;
+      align-items: stretch;
+    }
+  	#block-{{ block.id }} .content-container .page-width {
+      align-items: {{ desktop_alignment }};
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+  	#block-{{ block.id }} .svg-container {
+      display: flex;
+      align-items: stretch;
+    }
+  	#block-{{ block.id }} .svg-container .svgs {
+      align-items: center;
+      justify-content: center;
+      display: flex;
+      margin-left: 4rem;
+    }
+
+    #block-{{ block.id }} .mobile-slider { display: none; }
+    
+  	#block-{{ block.id }} .image-container { order: {{ image_container }}; }
+  	#block-{{ block.id }} .content-container { order: {{ content_container }}; }
+  }
+  
+  /* Small Devices, Tablets DOWN */
+  @media only screen and (max-width : 990px) {
+    #block-{{ block.id }} { margin: {{ block.settings.top_bottom_margin_xs }}rem 0; }
+
+  	#block-{{ block.id }} .content-container { margin: 48px 0; text-align: {{ block.settings.text_alignment_xs }};  }
+    
+  	#block-{{ block.id }} .desktop-title,
+  	#block-{{ block.id }} .desktop-body { display: none; }
+    
+    #block-{{ block.id }} .mobile-title,
+  	#block-{{ block.id }} .mobile-body { display: block; }
+    
+  	#block-{{ block.id }} .mobile-body p { color: {{ block.settings.color_body_xs }}; }
+  
+    #block-{{ block.id }} .image-container div { background-position: {{ block.settings.background_image_position_xs }}; }
+  }
+</style>
+
+<div id="block-{{ block.id }}" data-block-id="{{ block.id }}" class="grid grid--no-gutters">
+  <div class="wrapper {{ page_width }} ">
+
+    <div class="grid__item {{ screen_size }}--{{ image_grid_size }} js image-container hero--{{ block.settings.hero_size }} hero-{{ block.id }}">
+      {% if block.settings.image != blank %}
+        <div class="image-bar__item image-bar__item--{{ block.id }} box ratio-container lazyload"
+             data-bgset="{% include 'bgset', image: block.settings.image %}"
+             data-sizes="auto"
+             data-parent-fit="cover"
+             style="background-image: url('{{ block.settings.image | img_url: '300x300' }});">
+      </div>
+      {% endif %}
+    </div>
+  
+    <div class="grid__item {{ screen_size }}--one-{{ block.settings.content_grid_size }} content-container">
+      <div class="page-width">
+          {%- if block.settings.title != blank -%}
+          <div class="desktop-title">
+            <h1 class="{{ block.settings.title_size }}" style="color: {{ block.settings.color_title }}; font-weight: {{ block.settings.title_font_weight }};">{{ block.settings.title | escape }}</h1>
+          </div>
+          {%- endif -%}
+          
+          {%- if block.settings.title_xs != blank -%}
+          <div class="mobile-title">
+            <h1 class="{{ block.settings.title_size_xs }}" style="color: {{ block.settings.color_title_xs }}; font-weight: {{ block.settings.title_font_weight_xs }};">{{ block.settings.title_xs | escape }}</h1>
+          </div>
+          {%- endif -%}
+
+          <div class="grid grid--no-gutters svg-container">
+            <div class="grid__item medium-up--one-quarter icon-selection">
+              <img data-display="https://cdn.shopify.com/s/files/1/0279/3426/1346/files/nforce_modes-pulsing.gif?v=1595572281" src="https://cdn.shopify.com/s/files/1/0279/3426/1346/files/nforce_modes-pulsing.svg?v=1595541429" class="icon active"/>
+              <img data-display="https://cdn.shopify.com/s/files/1/0279/3426/1346/files/nforce_modes-constant.gif?v=1595572281" src="https://cdn.shopify.com/s/files/1/0279/3426/1346/files/nforce_modes-constant.svg?v=1595541429" class="icon"/>
+              <img data-display="https://cdn.shopify.com/s/files/1/0279/3426/1346/files/nforce_modes-stepup.gif?v=1595572281" src="https://cdn.shopify.com/s/files/1/0279/3426/1346/files/nforce_modes-stepup.svg?v=1595541429" class="icon"/>
+            </div>
+            <div class="grid__item medium-up--three-quarters current-icon">
+              <img src="https://cdn.shopify.com/s/files/1/0279/3426/1346/files/nforce_modes-pulsing.gif?v=1595572281"/>
+            </div>
+          </div>
+
+          {{ mobile_slideshow }}
+
+      </div>
+  	</div>
+      
+    <noscript>
+      <div class="grid__item medium-up--one-half">
+        <div class="image-bar__item image-bar__item--{{ block.id }}" style="background-image: url({{ block.settings.image | img_url: '2048x' }});"></div>
+      </div>
+    </noscript>
+
+    </div>
+</div>

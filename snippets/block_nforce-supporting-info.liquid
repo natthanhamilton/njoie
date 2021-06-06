@@ -1,0 +1,78 @@
+<style>
+  #block-{{ block.id }} { background-color: {{ block.settings.color_bg }}; padding: 100px 0; }
+
+  #block-{{ block.id }} .desktop-body p { color: {{ block.settings.color_body }}; }
+
+  #block-{{ block.id }} .image-wrapper { position: relative; width: 100%; }
+  
+  @media only screen and (min-width : 990px) {
+  	#block-{{ block.id }} .image-container { display: flex; }
+
+  	#block-{{ block.id }} .page-width { max-width: 600px; }
+  }
+</style>
+
+<div id="block-{{ block.id }}" data-block-id="{{ block.id }}">
+<div class="grid">
+
+    <div class="grid__item large-up--one-half image-container">
+
+    {% comment %}
+      {% if block.settings.image != blank %}
+        <div class="image-bar__item image-bar__item--{{ block.id }} box ratio-container lazyload"
+             data-bgset="{% include 'bgset', image: block.settings.image %}"
+             data-sizes="auto"
+             data-parent-fit="cover"
+             style="background-position: {{ block.settings.alignment }}; background-image: url('{{ block.settings.image | img_url: '300x300' }});">
+      </div>
+      {% endif %}
+    {% endcomment %}
+
+      <div class="image-wrapper" style="padding-top:{{ 1 | divided_by: block.settings.image.aspect_ratio | times: 100}}%;">
+        <img id="{{ img_id }}"
+              class="custom__image lazyload js"
+              src="{{ block.settings.image | img_url: '2000x' }}"
+              data-src="{{ img_url }}"
+              data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+              data-aspectratio="{{ block.settings.image.aspect_ratio }}"
+              data-sizes="auto"
+              alt="{{ block.settings.image.alt | escape }}">
+      </div>
+      <noscript>
+        {% capture image_size %}{{ max_height }}x{% endcapture %}
+        {{ block.settings.image | img_url: image_size, scale: 2, crop: 'top' | img_tag: block.settings.image.alt, 'custom__image' }}
+      </noscript>
+      
+    </div>
+  
+    <div class="grid__item large-up--one-half content-container">
+      <div class="page-width">
+        
+    <div class="tabs">
+      <div class="tab">
+        <input type="radio" id="rd1" name="rd" checked>
+        <label class="tab-label" for="rd1">What's in the box</label>
+        <div class="tab-content">
+          {{ block.settings.body_box }}
+        </div>
+      </div>
+      <div class="tab">
+        <input type="radio" id="rd2" name="rd">
+        <label class="tab-label" for="rd2">Specifications</label>
+        <div class="tab-content">
+          {{ block.settings.body_specs }}
+        </div>
+      </div>
+      <div class="tab">
+        <input type="radio" id="rd3" name="rd">
+        <label class="tab-label" for="rd3">Support</label>
+        <div class="tab-content">
+          {{ block.settings.body_support }}
+        </div>
+      </div>
+    </div>
+        
+      </div>
+  	</div>
+  </div>
+</div>

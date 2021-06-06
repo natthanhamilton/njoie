@@ -1,0 +1,60 @@
+<style>
+  .variant-control input { display: none; }
+  .variant-control label { display: flex; flex-direction: column; margin-left: 18px; text-align: center; align-items: center; }
+  .variant-control input:checked + img { opacity: 1;  border-color: #343434; }
+  .variant-control img { 
+    cursor: pointer; 
+    opacity: .33; 
+    height: auto;
+    width: 32px;
+    margin-bottom: 6px;
+    border: 1px solid transparent;
+    border-radius: 100%;
+    padding: 2px;
+  }
+</style>
+
+{% comment %} This is the UI piece {% endcomment %}
+{% capture 'variants' %}
+  {% for variant in product.variants %}
+  <div class="variant-control">
+      <label for="SingleOptionSelector-{{ forloop.index0 }}">
+    <input 
+      type="radio" 
+      name="variant" 
+      value="{{ variant.id }}"
+      id="SingleOptionSelector-{{ forloop.index0 }}"
+      {% if current_variant.id == variant.id %}checked{% endif %}
+      variant-controls
+      data-color="{{ variant.option1 }}"
+      >
+          <img src="{{ 'color_' | append: variant.option1 | replace: " & ", "_" | append: '.jpg' | file_img_url: '96x' }}" style="max-height: 36px;" />
+        {{ variant.option1 }}
+      </label>
+    </div>
+  {% endfor %}
+{% endcapture %}
+
+{% comment %} Behind the scenes it controls this {% endcomment %}
+{% capture 'variant_controls' %}
+  {% for option in product.options_with_values %}
+    <div class="selector-wrapper js product-form__item" style="display: none;">
+      <label {% if option.name == 'default' %}class="label--hidden" {% endif %}for="SingleOptionSelector-{{ forloop.index0 }}">
+        {{ option.name }}
+      </label>
+        <select class="single-option-selector single-option-selector-{{ section.id }} product-form__input"
+          id="SingleOptionSelector-{{ forloop.index0 }}"
+          data-index="option{{ forloop.index }}"
+        >
+          {% for value in option.values %}
+            <option value="{{ value | escape }}"{% if option.selected_value == value %} selected="selected"{% endif %}>{{ value }}</option>
+          {% endfor %}
+        </select>
+    </div>
+  {% endfor %}
+{% endcapture %}
+
+<div class="product-form__controls-group">
+  {{ variants }}
+  {{ variant_controls }}
+</div>

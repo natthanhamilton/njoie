@@ -1,0 +1,313 @@
+{% paginate blog.articles by 12 %}
+
+<style>
+  #section-{{ section.id }} { margin: {{ section.settings.top_bottom_margin }}rem auto; }
+  #section-{{ section.id }} .desktop-filters a { margin-left: 8px; color: #343434; text-transform: uppercase; }
+  #section-{{ section.id }} .mobile-title { display: none; }
+
+  .blocker { z-index: 10000 !important; }
+  .close-modal { display: none !important; }
+  .modal { 
+    padding: 0px;
+    margin: 0px;
+    max-width: initial;
+    height: 100%;
+    box-shadow: none;
+    background: none;
+   }
+   iframe { width: 100%; height: 100%; }
+
+  @media only screen and (min-width : 990px) {
+    #section-{{ section.id }} .mobile-filters { display: none; }
+  }
+  
+  /* Small Devices, Tablets DOWN */
+  @media only screen and (max-width : 990px) {
+    #section-{{ section.id }} { margin: {{ section.settings.top_bottom_margin_xs }}rem auto; }
+    #section-{{ section.id }} .desktop-filters { display: none; }
+  	#section-{{ section.id }} .desktop-title { display: none; }
+    #section-{{ section.id }} .mobile-title { display: block; }
+  }
+</style>
+
+<section id="section-{{ section.id }}" class="page-width">
+  <header class="section-header text-center">
+   {%- if section.settings.title != blank -%}
+    <div class="desktop-title">
+      <h1 class="{{ section.settings.title_size }}" style="text-align: {{ section.settings.text_alignment }}; color: {{ section.settings.color_title }}; font-weight: {{ section.settings.title_font_weight }};">{{ section.settings.title | escape }}</h1>
+    </div>
+  {%- endif -%}
+    
+  {%- if section.settings.title_xs != blank -%}
+    <div class="mobile-title">
+      <h1 class="{{ section.settings.title_size_xs }}" style="text-align: {{ section.settings.text_alignment_xs }}; color: {{ section.settings.color_title_xs }}; font-weight: {{ section.settings.title_font_weight_xs }};">{{ section.settings.title_xs | escape }}</h1>
+    </div>
+  {%- endif -%}
+  
+  {% if blog.tags.size > 0 %}
+    <div class="blog-filter desktop-filters">
+        <a href="{{ blog.url }}" {% unless current_tags %}style="font-weight: bold;"{% endunless %}>All</a>
+      {% for tag in blog.all_tags %}
+        <a href="{{ blog.url }}/tagged/{{ tag | handleize }}" {% if current_tags contains tag %}style="font-weight: bold;"{% endif %}>{{ tag }}</a>
+      {% endfor %}
+    </div>
+
+    <div class="blog-filter mobile-filters">
+      <label class="blog-filter__label select-label" for="BlogTagFilter">{{ 'collections.filters.title_tags' | t }}</label>
+      <div class="select-group">
+        <select id="BlogTagFilter" aria-describedby="a11y-refresh-page-message a11y-selection-message">
+          <option value="{{ blog.url }}">{{ 'blogs.article.all_topics' | t }}</option>
+          {% for tag in blog.all_tags %}
+            <option value="{{ blog.url }}/tagged/{{ tag | handleize }}" {% if current_tags contains tag %}selected{% endif %}>{{ tag }}</option>
+          {% endfor %}
+        </select>
+        {% include 'icon-chevron-down' %}
+      </div>
+    </div>
+  {% endif %}
+  </header>
+
+  <ul class="grid grid--uniform grid--blog">
+    {% for article in blog.articles %}
+      <li class="grid__item medium-up--one-third">
+        <a href="#{{ article.id }}" rel="modal:open" class="article__link">
+          {% if article.image %}
+            {% capture img_id %}ArticleImage-{{ article.image.id }}{% endcapture %}
+            {% capture img_wrapper_id %}ArticleImageWrapper-{{ article.image.id }}{% endcapture %}
+            {%- assign img_url = article.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+
+            {% include 'image-style', image: article.image, height: 345, wrapper_id: img_wrapper_id, img_id: img_id %}
+            <div id="{{ img_wrapper_id }}" class="article__grid-image-wrapper js">
+              <div class="article__grid-image-container" style="padding-top:{{ 1 | divided_by: article.image.aspect_ratio | times: 100 }}%;">
+                <img id="{{ img_id }}"
+                    class="article__grid-image lazyload"
+                    src="{{ article.image | img_url: '300x300' }}"
+                    data-src="{{ img_url }}"
+                    data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+                    data-aspectratio="{{ article.image.aspect_ratio }}"
+                    data-sizes="auto"
+                    alt="">
+              </div>
+            </div>
+            <noscript>
+              <div class="article__grid-image-wrapper">
+                {{ article | img_url: '345x345', scale: 2 | img_tag: article.title, 'article__grid-image' }}
+              </div>
+            </noscript>
+          {% endif %}
+        </a>
+
+        <div id="{{ article.id }}" class="modal" role="dialog" aria-modal="true" aria-labelledby="video-modal">
+          {{ article.content }}
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+
+
+{%- if paginate.pages > 1 -%}
+  {% include 'pagination', paginate: paginate %}
+{%- endif -%}
+
+{% endpaginate %}
+
+
+
+{% schema %}
+{
+  "name":  "Videos",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Desktop Settings"
+    },
+    {
+      "type": "number",
+      "id": "top_bottom_margin",
+      "label": "Top and Bottom Margin",
+      "info": "in REMs",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text Alignment",
+      "default": "left",
+      "options": [
+        {
+          "label": "left",
+          "value": "left"
+        },
+        {
+          "label": "center",
+          "value": "center"
+        },
+        {
+          "label": "right",
+          "value": "right"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Title Size",
+      "default": "h1",
+      "options": [
+        {
+          "label": "h1",
+          "value": "h1"
+        },
+        {
+          "label": "h2",
+          "value": "h2"
+        },
+        {
+          "label": "h3",
+          "value": "h3"
+        },
+        {
+          "label": "h4",
+          "value": "h4"
+        },
+        {
+          "label": "h5",
+          "value": "h5"
+        },
+        {
+          "label": "h6",
+          "value": "h6"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "DESKTOP TITLE"
+    },
+    {
+      "type": "select",
+      "id": "title_font_weight",
+      "label": "Title Font Weight",
+      "default": "normal",
+      "options": [
+        {
+          "label": "light",
+          "value": "light"
+        },
+        {
+          "label": "normal",
+          "value": "normal"
+        },
+        {
+          "label": "bold",
+          "value": "bold"
+        }
+      ]
+    },
+    {
+      "type": "color",
+      "id": "color_title",
+      "label": "Title Color",
+      "default": "#343434"
+    },
+    {
+      "type": "header",
+      "content": "Mobile Settings"
+    },
+    {
+      "type": "number",
+      "id": "top_bottom_margin_xs",
+      "label": "Top and Bottom Margin",
+      "info": "in REMs",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "text_alignment_xs",
+      "label": "Text Alignment",
+      "default": "center",
+      "options": [
+        {
+          "label": "left",
+          "value": "left"
+        },
+        {
+          "label": "center",
+          "value": "center"
+        },
+        {
+          "label": "right",
+          "value": "right"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "title_size_xs",
+      "label": "Title Size",
+      "default": "h1",
+      "options": [
+        {
+          "label": "h1",
+          "value": "h1"
+        },
+        {
+          "label": "h2",
+          "value": "h2"
+        },
+        {
+          "label": "h3",
+          "value": "h3"
+        },
+        {
+          "label": "h4",
+          "value": "h4"
+        },
+        {
+          "label": "h5",
+          "value": "h5"
+        },
+        {
+          "label": "h6",
+          "value": "h6"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "title_xs",
+      "label": "Heading",
+      "default": "MOBILE TITLE"
+    },
+    {
+      "type": "select",
+      "id": "title_font_weight_xs",
+      "label": "Title Font Weight",
+      "default": "normal",
+      "options": [
+        {
+          "label": "light",
+          "value": "light"
+        },
+        {
+          "label": "normal",
+          "value": "normal"
+        },
+        {
+          "label": "bold",
+          "value": "bold"
+        }
+      ]
+    },
+    {
+      "type": "color",
+      "id": "color_title_xs",
+      "label": "Title Color",
+      "default": "#343434"
+    }
+  ]
+}
+{% endschema %}

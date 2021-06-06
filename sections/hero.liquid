@@ -1,0 +1,510 @@
+{%- if section.settings.hero_layout == 'full_width' and section.settings.hero_size == 'adapt' -%}
+  {%- if section.settings.image.aspect_ratio == blank -%}
+    {%- assign min_aspect_ratio = 2.0 -%}
+  {%- else -%}
+    {%- assign min_aspect_ratio = section.settings.image.aspect_ratio -%}
+  {%- endif -%}
+  {%- assign wrapper_height = 100 | divided_by: min_aspect_ratio -%}
+
+  {%- style -%}
+    .hero-{{ section.id }} {
+      height: {{- wrapper_height -}}vw !important;
+    }
+  {%- endstyle -%}
+{%- endif -%}
+
+<style>
+  #section-{{ section.id }} .desktop-body p { color: {{ section.settings.color_body }}; }
+  
+  #section-{{ section.id }} .mobile-content-container,
+  #section-{{ section.id }} .mobile-title,
+  #section-{{ section.id }} .mobile-body {
+	  display: none; 
+  }
+  #section-{{ section.id }} .mobile-content-container {
+	  margin: {{ section.settings.content_margin_xs }};
+	  max-width: {{ section.settings.content_max_width_xs }}{% if section.settings.content_max_width_xs != 'none' %}px{% endif %};
+  }
+  #section-{{ section.id }} .desktop-content-container > .page-width > div {
+	  margin: {{ section.settings.content_margin }};
+	  max-width: {{ section.settings.content_max_width }}{% if section.settings.content_max_width != 'none' %}px{% endif %};
+  }
+
+  #section-{{ section.id }} .hero__inner { vertical-align: {{ section.settings.content_alignment }}; }
+
+  #section-{{ section.id }} .background-image { background-position: {{ section.settings.background_image_position }}; }
+
+  #block-{{ section.id }} .inner-content-container { max-width: {{ section.settings.content_max_width }}{% if section.settings.content_max_width != 'none' %}px{% endif %}; }
+
+  /* Small Devices, Tablets DOWN */
+  @media only screen and (max-width : 768px) {
+  	#section-{{ section.id }} .hero__inner { vertical-align: {{ section.settings.content_alignment_xs }}; }
+
+    #section-{{ section.id }} .background-image { background-position: {{ section.settings.background_image_position_xs }}; }
+
+  	#section-{{ section.id }} .desktop-content-container,
+  	#section-{{ section.id }} .desktop-title,
+  	#section-{{ section.id }} .desktop-body { display: none; }
+    
+    #section-{{ section.id }} .mobile-content-container,
+    #section-{{ section.id }} .mobile-title,
+  	#section-{{ section.id }} .mobile-body { display: block; }
+    
+  	#section-{{ section.id }} .mobile-body p { color: {{ section.settings.color_body_xs }}; }
+  }
+</style>
+
+{% capture renderContent %}
+<div class="page-width text-{{ section.settings.text_alignment }}">
+	<div>
+	{%- if section.settings.title != blank -%}
+	<div class="desktop-title">
+	<h1 class="{{ section.settings.title_size }}" style="color: {{ section.settings.color_title }}">{{ section.settings.title | escape }}</h1>
+	</div>
+	{%- endif -%}
+	
+	{%- if section.settings.title_xs != blank -%}
+	<div class="mobile-title">
+	<h1 class="{{ section.settings.title_size_xs }}" style="color: {{ section.settings.color_title_xs }}">{{ section.settings.title_xs | escape }}</h1>
+	</div>
+	{%- endif -%}
+	
+	{%- if section.settings.text != blank -%}
+	<div class="desktop-body">
+	{{ section.settings.text }}
+	</div>
+	{%- endif -%}
+	
+	{%- if section.settings.text_xs != blank -%}
+	<div class="mobile-body">
+	{{ section.settings.text_xs }}
+	</div>
+	{%- endif -%}
+	
+	{%- if section.settings.button_label != blank and section.settings.button_link != blank -%}
+	{%- capture ariaLabel -%}
+		{{- section.settings.button_label -}}
+		{%- if section.settings.button_link.type == 'frontpage_link' -%}
+		: {{ 'homepage.general.title' | t -}}
+		{%- elsif section.settings.button_link.type == 'catalog_link' -%}
+		: {{ 'collections.catalog.title' | t -}}
+		{%- elsif section.settings.button_link.object.title -%}
+		: {{ section.settings.button_link.object.title -}}
+		{%- endif -%}
+	{%- endcapture -%}
+
+	<a href="{{ section.settings.button_link }}"
+		class="btn {{ section.settings.button_theme }}"
+		style="margin-top: 27.5px;"
+		aria-label="{{ ariaLabel }}">
+		{{- section.settings.button_label | escape -}}
+	</a>
+	{%- endif -%}
+	</div>
+</div>
+{% endcapture %}
+
+<div id="section-{{ section.id }}" data-section-id="{{ section.id }}" data-section-type="hero-section">
+  {%- if section.settings.hero_layout == 'fixed_width' -%}
+    <div class="page-width">
+  {%- endif -%}
+      
+  {%- if section.settings.hero_layout == 'fixed_width' and section.settings.hero_size ==  'adapt' -%}
+    {%- assign slide_width = 1090 -%}
+    {%- assign min_aspect_ratio = section.settings.image.aspect_ratio | default: 2.0 -%}
+    <div class="hero-fixed-width hero--adapt"
+         id="Hero-{{ section.id }}"
+         data-layout="{{ section.settings.hero_layout }}">
+      {%- assign img_url = section.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+      {%- if section.settings.image.width < max_width -%}
+        {%- assign slide_width = section.settings.image.width -%}
+      {%- endif -%}
+      <div class="hero-fixed-width__content">
+        <div class="page-width text-{{ section.settings.text_alignment }}">
+          {%- if section.settings.title != blank -%}
+            <h2 class="h1 mega-title{% if section.settings.text_size == 'large' %} mega-title--large{% endif %}">{{ section.settings.title | escape }}</h2>
+          {%- endif -%}
+          {%- if section.settings.text != blank -%}
+            <div class="rte-setting mega-subtitle{% if section.settings.text_size == 'large' %} mega-subtitle--large{% endif %}">{{ section.settings.text }}</div>
+          {%- endif -%}
+          {%- if section.settings.button_label != blank and section.settings.button_link != blank -%}
+            <a href="{{ section.settings.button_link }}" class="btn hero__btn">
+              {{ section.settings.button_label | escape }}
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+      {%- if section.settings.image != blank -%}
+        <img class="hero-fixed-width__image lazyload lazypreload"
+             src="{{ section.settings.image | img_url: '300x300' }}"
+             data-src="{{ img_url }}"
+             data-widths="[180, 360, 470, 600, 770, 970, 1060, 1280, 1512, 1728, 2048]"
+             data-aspectratio="{{ section.settings.image.aspect_ratio }}"
+             data-sizes="auto"
+             style="{%- if slide_width <= max_width -%}
+                      {%- assign min_width = slide_width | times: 100 | divided_by: max_width -%}
+                      min-width: {{ min_width }}%;
+                    {%- endif -%}
+                    {% comment %} object-position: {{ section.settings.alignment }}; {% endcomment %}
+					"
+             alt="{{ section.settings.image.alt | escape }}">
+      {%- else -%}
+        <span>
+          {% capture current %}{% cycle 1, 2 %}{% endcapture %}
+          {{ 'lifestyle-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+        </span>
+      {%- endif -%}
+      <noscript>
+        <div class="hero-fixed-width__image"{% if section.settings.image %}{% unless section.settings.image.alt == blank %} role="img" aria-label="{{ section.settings.image.alt | escape }}"{% endunless %} style="background-image: url('{{ section.settings.image | img_url: '2048x' }}'); background-position: center {{ section.settings.alignment }};"{% endif %}></div>
+      </noscript>
+    </div>
+  {%- else -%}
+    <div class="background-image hero hero--{{ section.settings.hero_size }} hero-{{ section.id }} box ratio-container lazyload js"
+         id="Hero-{{ section.id }}"
+         data-layout="{{ section.settings.hero_layout }}"
+         {%- if section.settings.image -%}
+          {% unless section.settings.image.alt == blank %}
+          role="img"
+          aria-label="{{ section.settings.image.alt | escape }}"
+          data-alt="{{ section.settings.image.alt | escape }}"
+          {% endunless %}
+         data-bg="{{ section.settings.image | img_url: '300x300' }}"
+         data-bgset="{% include 'bgset', image: section.settings.image %}"
+         data-sizes="auto"
+         data-parent-fit="cover"
+         style="background-position: {{ section.settings.alignment }}; background-image: url('{{ section.settings.image | img_url: '300x300' }});"
+         {%- endif -%}
+         >
+      
+    {%- if section.settings.image == blank -%}
+      <div class="placeholder-background">
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      </div>
+    {%- endif -%}
+      
+      <div class="hero__inner desktop-content-container">
+	  	{{ renderContent }}
+      </div>
+    </div>
+      
+    <noscript>
+      <div class="hero hero--{{ section.settings.hero_size }}"{% if section.settings.image %}{% unless section.settings.image.alt == blank %} role="img" aria-label="{{ section.settings.image.alt | escape }}"{% endunless %} style="background-image: url('{{ section.settings.image | img_url: '2048x' }}'); background-position: center {{ section.settings.alignment }};"{% endif %}></div>
+    </noscript>
+	<div class="hero__inner mobile-content-container">
+		{{ renderContent }}
+	</div>
+  {%- endif -%}
+      
+  {%- if section.settings.hero_layout == 'fixed_width' -%}
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+	"name": "Image with text overlay",
+	"class": "index-section--flush",
+	"settings": [
+		{
+			"type": "header",
+			"content": "Content"
+		},
+		{
+			"type": "image_picker",
+			"id": "image",
+			"label": "Image"
+		},
+		{
+			"type": "select",
+			"id": "hero_layout",
+			"label": "Layout",
+			"default": "full_width",
+			"options": [
+				{
+					"label": "Full width",
+					"value": "full_width"
+				},
+				{
+					"label": "Fixed width",
+					"value": "fixed_width"
+				}
+			]
+		},
+		{
+			"type": "select",
+			"id": "hero_size",
+			"label": "Section height",
+			"default": "medium",
+			"options": [
+				{
+					"label": "Adapt to image",
+					"value": "adapt"
+				},
+				{
+					"label": "Extra Small",
+					"value": "x-small"
+				},
+				{
+					"label": "Small",
+					"value": "small"
+				},
+				{
+					"label": "Medium",
+					"value": "medium"
+				},
+				{
+					"label": "Large",
+					"value": "large"
+				},
+				{
+					"label": "Extra Large",
+					"value": "x-large"
+				}
+			]
+		},
+		{
+			"type": "select",
+			"id": "text_alignment",
+			"label": "Text Alignment",
+			"default": "center",
+			"options": [
+				{
+					"label": "left",
+					"value": "left"
+				},
+				{
+					"label": "center",
+					"value": "center"
+				},
+				{
+					"label": "right",
+					"value": "right"
+				}
+			]
+		},
+		{
+			"type": "header",
+			"content": "Desktop Settings"
+		},
+		{
+			"type": "text",
+			"id": "background_image_position",
+			"label": "Background Image Position",
+			"default": "50% 50%"
+		},
+		{
+			"type": "select",
+			"id": "content_alignment",
+			"label": "Content Alignment",
+			"default": "center",
+			"options": [
+				{
+					"label": "top",
+					"value": "top"
+				},
+				{
+					"label": "center",
+					"value": "center"
+				},
+				{
+					"label": "bottom",
+					"value": "bottom"
+				}
+			]
+		},
+		{
+			"type": "text",
+			"id": "content_max_width",
+			"label": "Content Max Width",
+			"default": "none"
+		},
+		{
+			"type": "text",
+			"id": "content_margin",
+			"label": "Content Margin",
+			"default": "0 auto"
+		},
+		{
+			"type": "select",
+			"id": "title_size",
+			"label": "Title Size",
+			"default": "h1",
+			"options": [
+				{
+					"label": "h1",
+					"value": "h1"
+				},
+				{
+					"label": "h2",
+					"value": "h2"
+				},
+				{
+					"label": "h3",
+					"value": "h3"
+				},
+				{
+					"label": "h4",
+					"value": "h4"
+				},
+				{
+					"label": "h5",
+					"value": "h5"
+				},
+				{
+					"label": "h6",
+					"value": "h6"
+				}
+			]
+		},
+		{
+			"type": "text",
+			"id": "title",
+			"label": "Heading",
+			"default": "DESKTOP TITLE"
+		},
+		{
+			"type": "color",
+			"id": "color_title",
+			"label": "Title Color"
+		},
+		{
+			"type": "textarea",
+			"id": "text",
+			"label": "Text",
+			"default": "<p>DESKTOP BODY</p>"
+		},
+		{
+			"type": "color",
+			"id": "color_body",
+			"label": "Body Color"
+		},
+		{
+			"type": "header",
+			"content": "Mobile Settings"
+		},
+		{
+			"type": "text",
+			"id": "background_image_position_xs",
+			"label": "Background Image Position",
+			"default": "50% 50%"
+		},
+		{
+			"type": "select",
+			"id": "content_alignment_xs",
+			"label": "Content Alignment",
+			"default": "center",
+			"options": [
+				{
+					"label": "top",
+					"value": "top"
+				},
+				{
+					"label": "center",
+					"value": "center"
+				},
+				{
+					"label": "bottom",
+					"value": "bottom"
+				}
+			]
+		},
+		{
+			"type": "text",
+			"id": "content_max_width_xs",
+			"label": "Content Max Width",
+			"default": "none"
+		},
+		{
+			"type": "text",
+			"id": "content_margin_xs",
+			"label": "Content Margin",
+			"default": "0 auto"
+		},
+		{
+			"type": "select",
+			"id": "title_size_xs",
+			"label": "Title Size",
+			"default": "h1",
+			"options": [
+				{
+					"label": "h1",
+					"value": "h1"
+				},
+				{
+					"label": "h2",
+					"value": "h2"
+				},
+				{
+					"label": "h3",
+					"value": "h3"
+				},
+				{
+					"label": "h4",
+					"value": "h4"
+				},
+				{
+					"label": "h5",
+					"value": "h5"
+				},
+				{
+					"label": "h6",
+					"value": "h6"
+				}
+			]
+		},
+		{
+			"type": "text",
+			"id": "title_xs",
+			"label": "Heading",
+			"default": "MOBILE TITLE"
+		},
+		{
+			"type": "color",
+			"id": "color_title_xs",
+			"label": "Title Color"
+		},
+		{
+			"type": "textarea",
+			"id": "text_xs",
+			"label": "Text",
+			"default": "<p>MOBILE BODY</p>"
+		},
+		{
+			"type": "color",
+			"id": "color_body_xs",
+			"label": "Body Color"
+		},
+		{
+			"type": "header",
+			"content": "Button"
+		},
+		{
+			"type": "text",
+			"id": "button_label",
+			"label": "Button label"
+		},
+		{
+			"type": "url",
+			"id": "button_link",
+			"label": "Button link"
+		},
+		{
+			"type": "select",
+			"id": "button_theme",
+			"label": "Button Style",
+			"options": [
+				{ "value": "btn--primary", "label": "Primary" },
+				{ "value": "btn--secondary", "label": "Secondary" },
+				{ "value": "btn--link", "label": "Link" }
+			],
+			"default": "btn--primary"
+		}
+	],
+	"presets": [
+		{
+			"name": "Image with text overlay",
+			"category": "Image"
+		}
+	]
+}
+{% endschema %}

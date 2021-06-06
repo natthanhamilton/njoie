@@ -1,0 +1,354 @@
+<style>
+  #section-{{ section.id }} .desktop-body p { color: {{ section.settings.color_body }}; }
+  #section-{{ section.id }} .mobile { display: none; }
+
+  
+  /* Small Devices, Tablets DOWN */
+  @media only screen and (max-width : 768px) {
+    #section-{{ section.id }} .mobile { display: block; margin-top: 1rem; }
+    #section-{{ section.id }} .desktop { display: none; }
+  }
+
+  /*
+  @media only screen and (max-width : 480px) {
+    #section-{{ section.id }} .background-image { 
+      height: initial;
+      background-size: contain;
+      background-color: transparent;
+      display: block;
+     }
+  }
+  */
+</style>
+
+{% assign blockTotal = 2 %}
+{% assign gridSize = 'half' %}
+
+{% if section.settings.section_3_image != blank %}
+  {% assign blockTotal = 3 %}
+  {% assign gridSize = 'third' %}
+{% endif %}
+{% if section.settings.section_4_image != blank %}
+  {% assign blockTotal = 4 %}
+  {% assign gridSize = 'quarter' %}
+{% endif %}
+
+<div id="section-{{ section.id }}" data-block-id="{{ section.id }}" data-block-type="hero-section" style="margin: 5rem 0;">
+  <div class="grid page-width">
+  {% for block in section.blocks %}
+
+    <style>
+      #block-{{ block.id }} .background-image { background-position: {{ block.settings.background_image_position }}; }
+      #block-{{ block.id }} .desktop-body p { color: {{ block.settings.body_color }}; }
+      
+      @media only screen and (max-width : 768px) {
+      #block-{{ block.id }} { 
+        padding-left: 0;
+        {% unless forloop.first == true %}margin-top: 2rem;{% endunless %}
+      }
+        #block-{{ block.id }} .background-image { 
+          background-position: {{ block.settings.background_image_position_xs }}; 
+          height: {{ block.settings.background_image_height_xs }}px; 
+        }
+      }
+    </style>
+
+    {% capture content %}
+      {%- if block.settings.title != blank -%}
+        <div class="desktop-title">
+          <h1 class="{{ block.settings.title_size }}" style="color: {{ block.settings.title_color }}">{{ block.settings.title | escape }}</h1>
+        </div>
+      {%- endif -%}
+
+      {%- if block.settings.body != blank -%}
+        <div class="desktop-body section-{{ i }}">
+          {{ block.settings.body }}
+        </div>
+      {%- endif -%}
+
+      {%- if block.settings.button_label != blank and block.settings.button_link != blank -%}
+        {%- capture ariaLabel -%}
+          {{- block.settings.button_label -}}
+          {%- if block.settings.button_link.type == 'frontpage_link' -%}
+            : {{ 'homepage.general.title' | t -}}
+          {%- elsif block.settings.button_link.type == 'catalog_link' -%}
+            : {{ 'collections.catalog.title' | t -}}
+          {%- elsif block.settings.button_link.object.title -%}
+            : {{ block.settings.button_link.object.title -}}
+          {%- endif -%}
+        {%- endcapture -%}
+
+        <a href="{{ block.settings.button_link }}"
+          class="btn btn--secondary" style="margin-top: 1rem;"
+          aria-label="{{ ariaLabel }}">
+          {{- block.settings.button_label | escape -}}
+        </a>
+      {%- endif -%}
+    {% endcapture %}
+
+    <div id="block-{{ block.id }}" class="grid__item large-up--one-{{ gridSize }}">
+      <a href="{{ block.settings.url }}">
+
+        {%- if block.settings.outside_title != blank -%}
+          <div class="desktop-title">
+            <h1 class="{{ block.settings.outside_title_size }}" style="color: {{ block.settings.outside_title_color }}">{{ block.settings.outside_title | escape }}</h1>
+          </div>
+        {%- endif -%}
+
+        <div class="hero box ratio-container lazyload js background-image"
+              data-layout="{{ block.settings.hero_layout }}"
+              {%- if block.settings.image -%}
+              {% unless block.settings.image.alt == blank %}
+              role="img"
+              aria-label="{{ block.settings.image.alt | escape }}"
+              data-alt="{{ block.settings.image.alt | escape }}"
+              {% endunless %}
+              data-bg="{{ block.settings.image | img_url: '300x300' }}"
+              data-bgset="{% include 'bgset', image: block.settings.image %}"
+              data-sizes="auto"
+              data-parent-fit="cover"
+              style="background-image: url('{{ block.settings.image | img_url: '300x300' }});"
+              {%- endif -%}
+            >
+            
+          {%- if block.settings.image == blank -%}
+            <div class="placeholder-background">
+              {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+            </div>
+          {%- endif -%}
+          
+          {%- if block.settings.title != blank or block.settings.body != blank -%}
+            <div class="hero__inner desktop" style="vertical-align: inherit; padding-top: 35px;">
+              <div class="page-width" style="margin: 0; max-width: 310px;">
+                {{ content }}
+              </div>
+            </div>
+          {%- endif -%}
+
+        </div>
+      </a>
+
+      <div class="mobile">{{ content }}</div>
+        
+      <noscript>
+        <div class="hero"{% if block.settings.image %}{% unless block.settings.image.alt == blank %} role="img" aria-label="{{ block.settings.image.alt | escape }}"{% endunless %} style="background-image: url('{{ block.settings.image | img_url: '2048x' }}'); background-position: center {{ block.settings.alignment }};"{% endif %}></div>
+      </noscript>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+
+{% schema %}
+{
+  "name": "Image Text Blocks",
+  "blocks": [
+    {
+      "type": "image_block",
+      "name": "Block",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+				{
+					"type": "text",
+					"id": "background_image_position",
+					"label": "Background Position",
+					"default": "50% 50%"
+				},
+				{
+					"type": "text",
+					"id": "background_image_position_xs",
+					"label": "Mobile Background Position",
+					"default": "50% 50%"
+				},
+				{
+					"type": "number",
+					"id": "background_image_height_xs",
+					"label": "Mobile Background Height"
+				},
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "outside_title",
+          "label": "Outside Text"
+        },
+        {
+          "type": "select",
+          "id": "outside_title_size",
+          "label": "Outside Text Size",
+          "default": "h1",
+          "options": [
+            {
+              "label": "h1",
+              "value": "h1"
+            },
+            {
+              "label": "h2",
+              "value": "h2"
+            },
+            {
+              "label": "h3",
+              "value": "h3"
+            },
+            {
+              "label": "h4",
+              "value": "h4"
+            },
+            {
+              "label": "h5",
+              "value": "h5"
+            },
+            {
+              "label": "h6",
+              "value": "h6"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "outside_title_font_weight",
+          "label": "Outside Text Font Weight",
+          "default": "normal",
+          "options": [
+            {
+              "label": "light",
+              "value": "light"
+            },
+            {
+              "label": "normal",
+              "value": "normal"
+            },
+            {
+              "label": "bold",
+              "value": "bold"
+            }
+          ]
+        },
+        {
+          "type": "color",
+          "id": "outside_title_color",
+          "label": "Outside Text Color",
+          "default": "#343434"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Section 1 Title",
+          "default": "Title"
+        },
+        {
+          "type": "select",
+          "id": "title_size",
+          "label": "Section 1 Size",
+          "default": "h1",
+          "options": [
+            {
+              "label": "h1",
+              "value": "h1"
+            },
+            {
+              "label": "h2",
+              "value": "h2"
+            },
+            {
+              "label": "h3",
+              "value": "h3"
+            },
+            {
+              "label": "h4",
+              "value": "h4"
+            },
+            {
+              "label": "h5",
+              "value": "h5"
+            },
+            {
+              "label": "h6",
+              "value": "h6"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "title_font_weight",
+          "label": "Section 1 Font Weight",
+          "default": "normal",
+          "options": [
+            {
+              "label": "light",
+              "value": "light"
+            },
+            {
+              "label": "normal",
+              "value": "normal"
+            },
+            {
+              "label": "bold",
+              "value": "bold"
+            }
+          ]
+        },
+        {
+          "type": "color",
+          "id": "title_color",
+          "label": "Section 1 Color",
+          "default": "#343434"
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Text",
+          "default": "<p>DESKTOP BODY</p>"
+        },
+        {
+          "type": "color",
+          "id": "body_color",
+          "label": "Body Color",
+          "default": "#343434"
+        },
+				{
+					"type": "text",
+					"id": "button_label",
+					"label": "Button label"
+				},
+				{
+					"type": "url",
+					"id": "button_link",
+					"label": "Button link"
+				},
+				{
+					"type": "select",
+					"id": "button_theme",
+					"label": "Button Style",
+					"options": [
+						{ "value": "btn-primary", "label": "Primary" },
+						{
+							"value": "btn-outline-primary",
+							"label": "Primary Outline"
+						},
+						{ "value": "btn-secondary", "label": "Secondary" },
+						{
+							"value": "btn-outline-secondary",
+							"label": "Secondary Outline"
+						}
+					],
+					"default": "btn-primary"
+				}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image text block",
+      "category": "Image"
+    }
+  ]
+}
+{% endschema %}

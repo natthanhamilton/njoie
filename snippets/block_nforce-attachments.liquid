@@ -1,0 +1,204 @@
+{%- assign desktop_alignment = 'flex-start' -%}
+{%- if block.settings.text_alignment == 'center' -%}{%- assign desktop_alignment = 'center' -%}{%- endif -%}
+{%- if block.settings.text_alignment == 'right' -%}{%- assign desktop_alignment = 'flex-end' -%}{%- endif -%}
+
+{%- assign image_container = 0 -%}
+{%- assign content_container = 1 -%}
+{%- if block.settings.image_alignment == 'right' -%}
+	{%- assign image_container = 1 -%}
+	{%- assign content_container = 0 -%}
+{%- endif -%}
+
+{% capture page_width %}
+{%- if block.settings.hero_layout == 'fixed_width' -%} page-width{%- endif -%}
+{% endcapture %}
+
+{%- assign image_grid_size = 'one-half' -%}
+{%- if block.settings.content_grid_size == 'quarter' -%}{%- assign image_grid_size = 'three-quarters' -%}{%- endif -%}
+{%- if block.settings.content_grid_size == 'third' -%}{%- assign image_grid_size = 'two-thirds' -%}{%- endif -%}
+
+{%- assign screen_size = 'large-up' -%}
+{%- if block.settings.content_grid_size == 'half' -%}{%- assign screen_size = 'large-up' -%}{%- endif -%}
+
+<style>
+  #block-{{ block.id }} { background-color: {{ block.settings.color_bg }}; margin: {{ block.settings.top_bottom_margin }}rem 0; }
+
+  #block-{{ block.id }} .desktop-body p { color: {{ block.settings.color_body }}; }
+
+  #block-{{ block.id }} .mobile-title,
+  #block-{{ block.id }} .mobile-body { display: none; }
+
+  #block-{{ block.id }} .ratio-container { height: 100%; }
+
+  #block-{{ block.id }} .icon {
+    width: auto;
+    height: 30px;
+    display: block;
+    filter: brightness(0) invert(1);
+    opacity: 0.4;
+  }
+  #block-{{ block.id }} .icon:hover { cursor: pointer; }
+  #block-{{ block.id }} .icon:not(:first-child) { margin-left: 24px; }
+  #block-{{ block.id }} .icon.active { opacity: 1; height: 60px; }
+  #block-{{ block.id }} .current-icon img { max-height: 400px; }
+  #block-{{ block.id }} .icon-selection {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    margin: 4rem 0;
+  }
+  #block-{{ block.id }} .attachments-container { min-height: 400px; color: #fff; }
+  #block-{{ block.id }} .attachments > div { display: none; }
+  #block-{{ block.id }} .attachments .active { display: block; opacity: 1; }
+
+  #block-{{ block.id }} .image-container img { max-height: 100%; }
+  #block-{{ block.id }} .image-container { text-align: center; }
+
+  #block-{{ block.id }} .image-container div { background-position: {{ block.settings.background_image_position }}; }
+  #block-{{ block.id }} .inner-content-container { max-width: {{ block.settings.content_max_width }}{% if block.settings.content_max_width != 'none' %}px{% endif %}; }
+
+  @media only screen and (min-width : 990px) {
+  	#block-{{ block.id }} .wrapper { 
+      display: flex; 
+      align-items: stretch; 
+      text-align: {{ block.settings.text_alignment }}; 
+    }
+    #block-{{ block.id }} .content-container {
+      display: flex;
+      align-items: stretch;
+    }
+  	#block-{{ block.id }} .content-container .page-width {
+      align-items: {{ desktop_alignment }};
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+  	#block-{{ block.id }} .svg-container {
+      display: flex;
+      align-items: stretch;
+    }
+  	#block-{{ block.id }} .svg-container .svgs {
+      align-items: center;
+      justify-content: center;
+      display: flex;
+      margin-left: 4rem;
+    }
+
+    #block-{{ block.id }} .mobile-slider { display: none; }
+    
+  	#block-{{ block.id }} .image-container { order: {{ image_container }}; }
+  	#block-{{ block.id }} .content-container { order: {{ content_container }}; }
+  }
+  
+
+  /* Small Devices, Tablets DOWN */
+  @media only screen and (max-width : 990px) {
+    #block-{{ block.id }} { margin: {{ block.settings.top_bottom_margin_xs }}rem 0; }
+
+  	#block-{{ block.id }} .content-container { margin: 48px 0; text-align: {{ block.settings.text_alignment_xs }};  }
+    
+  	#block-{{ block.id }} .desktop-title,
+  	#block-{{ block.id }} .desktop-body { display: none; }
+    
+    #block-{{ block.id }} .mobile-title,
+  	#block-{{ block.id }} .mobile-body { display: block; }
+    
+  	#block-{{ block.id }} .mobile-body p { color: {{ block.settings.color_body_xs }}; }
+
+    #block-{{ block.id }} .icon-selection { justify-content: center; }
+  
+    #block-{{ block.id }} .image-container div { background-position: {{ block.settings.background_image_position_xs }}; }
+  
+    #block-{{ block.id }} .inner-content-container { max-width: {{ block.settings.content_max_width_xs }}{% if block.settings.content_max_width_xs != 'none' %}px{% endif %}; }
+}
+</style>
+
+
+<div id="block-{{ block.id }}" data-block-id="{{ block.id }}" class="grid grid--no-gutters">
+  <div class="wrapper {{ page_width }} ">
+
+    <div class="grid__item {{ screen_size }}--{{ image_grid_size }} js image-container hero--{{ block.settings.hero_size }} hero-{{ block.id }}">
+      {% if block.settings.image != blank %}
+        <div class="image-bar__item image-bar__item--{{ block.id }} box ratio-container lazyload"
+             data-bgset="{% include 'bgset', image: block.settings.image %}"
+             data-sizes="auto"
+             data-parent-fit="cover"
+             style="background-image: url('{{ block.settings.image | img_url: '300x300' }});">
+      </div>
+
+      <!--
+          <img id="{{ img_id }}"
+                class="lazyload js"
+                src="{{ block.settings.image | img_url: '2000x' }}"
+                data-src="{{ img_url }}"
+                data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+                data-aspectratio="{{ block.settings.image.aspect_ratio }}"
+                data-sizes="auto"
+                alt="{{ block.settings.image.alt | escape }}">
+      -->
+      {% endif %}
+
+      <noscript>
+        <div class="grid__item medium-up--one-half">
+          <div class="image-bar__item image-bar__item--{{ block.id }}" style="background-image: url({{ block.settings.image | img_url: '2048x' }});"></div>
+        </div>
+      </noscript>
+    </div>
+  
+    <div class="grid__item {{ screen_size }}--one-{{ block.settings.content_grid_size }} content-container">
+      <div class="page-width inner-content-container">
+          {%- if block.settings.title != blank -%}
+          <div class="desktop-title">
+            <h1 class="{{ block.settings.title_size }}" style="color: {{ block.settings.color_title }}; font-weight: {{ block.settings.title_font_weight }}; margin: 0;">{{ block.settings.title | escape }}</h1>
+          </div>
+          {%- endif -%}
+          
+          {%- if block.settings.title_xs != blank -%}
+          <div class="mobile-title">
+            <h1 class="{{ block.settings.title_size_xs }}" style="color: {{ block.settings.color_title_xs }}; font-weight: {{ block.settings.title_font_weight_xs }};">{{ block.settings.title_xs | escape }}</h1>
+          </div>
+          {%- endif -%}
+
+          <div class="grid grid--no-gutters attachments-container">
+            <div class="icon-selection">
+              <img data-target="attachment_1" src="https://cdn.shopify.com/s/files/1/0279/3426/1346/files/nforce_tip_fork.svg?v=1595888365" class="icon active"/>
+              <img data-target="attachment_2" src="https://cdn.shopify.com/s/files/1/0279/3426/1346/files/nforce_tip_point.svg?v=1595888365" class="icon"/>
+              <img data-target="attachment_3" src="https://cdn.shopify.com/s/files/1/0279/3426/1346/files/nforce_tip_round_large.svg?v=1595888365" class="icon"/>
+              <img data-target="attachment_4" src="https://cdn.shopify.com/s/files/1/0279/3426/1346/files/nforce_tip_round.svg?v=1595888365" class="icon"/>
+              <img data-target="attachment_5" src="https://cdn.shopify.com/s/files/1/0279/3426/1346/files/nforce_tip_flat.svg?v=1595888365" class="icon"/>
+              <img data-target="attachment_6" src="https://cdn.shopify.com/s/files/1/0279/3426/1346/files/nforce_tip_multipoint.svg?v=1595888365" class="icon"/>
+            </div>
+            <div class="attachments">
+              <div class="active" id="attachment_1">
+                <h3>{{ block.settings.attachment_1_title | escape }}</h3>
+                {{ block.settings.attachment_1_body | escape }}
+              </div>
+              <div id="attachment_2">
+                <h3>{{ block.settings.attachment_2_title | escape }}</h3>
+                {{ block.settings.attachment_2_body | escape }}
+              </div>
+              <div id="attachment_3">
+                <h3>{{ block.settings.attachment_3_title | escape }}</h3>
+                {{ block.settings.attachment_3_body | escape }}
+              </div>
+              <div id="attachment_4">
+                <h3>{{ block.settings.attachment_4_title | escape }}</h3>
+                {{ block.settings.attachment_4_body | escape }}
+              </div>
+              <div id="attachment_5">
+                <h3>{{ block.settings.attachment_5_title | escape }}</h3>
+                {{ block.settings.attachment_5_body | escape }}
+              </div>
+              <div id="attachment_6">
+                <h3>{{ block.settings.attachment_6_title | escape }}</h3>
+                {{ block.settings.attachment_6_body | escape }}
+              </div>
+            </div>
+          </div>
+
+      </div>
+  	</div>
+
+    </div>
+</div>

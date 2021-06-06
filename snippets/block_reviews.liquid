@@ -1,0 +1,20 @@
+<style>
+  #block-{{ block.id }} { margin: 6rem 0; }
+</style>
+
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+
+<div id="block-{{ block.id }}" data-block-id="{{ block.id }}">
+  <div class="page-width">
+    <h1 class="text-center">Customer Reviews</h1>
+
+    <div class="yotpo yotpo-main-widget"
+      data-product-id="{{ current_variant.id }}"
+      data-price="{{ current_variant.price | money }}"
+      data-currency="{{ shop.currency }}"
+      data-name="{{ product.title }}"
+      data-url="{{shop.domain}}{{ product.url }}"
+      data-image-url="https:{{ product.featured_image | img_url }}">
+    </div>
+  </div>
+</div>

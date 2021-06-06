@@ -1,0 +1,79 @@
+<style>
+  #block-{{ block.id }} { 
+    background-color: {{ block.settings.color_bg }}; 
+    border-top: 1px solid #d3d3d3;
+  }
+
+  #block-{{ block.id }} .content-container { margin: 48px 0; text-align: {{ block.settings.text_alignment }};  }
+
+  #block-{{ block.id }} .desktop-body p { color: {{ block.settings.color_body }}; }
+
+  #block-{{ block.id }} .mobile-title,
+  #block-{{ block.id }} .mobile-body { display: none; }
+
+  
+  /* Small Devices, Tablets DOWN */
+  @media only screen and (max-width : 768px) {
+  	#block-{{ block.id }} .content-container { text-align: {{ block.settings.text_alignment_xs }};  }
+    
+  	#block-{{ block.id }} .desktop-title,
+  	#block-{{ block.id }} .desktop-body { display: none; }
+    
+    #block-{{ block.id }} .mobile-title,
+  	#block-{{ block.id }} .mobile-body { display: block; }
+    
+  	#block-{{ block.id }} .mobile-body p { color: {{ block.settings.color_body_xs }}; }
+  }
+</style>
+
+<div id="block-{{ block.id }}" data-block-id="{{ block.id }}" class="grid">
+
+    <div class="grid__item content-container">
+      <div class="page-width">
+          {%- if block.settings.title != blank -%}
+          <div class="desktop-title">
+            <h1 class="{{ block.settings.title_size }}" style="color: {{ block.settings.color_title }}; font-weight: {{ block.settings.title_font_weight }};">{{ block.settings.title | escape }}</h1>
+          </div>
+          {%- endif -%}
+          
+          {%- if block.settings.title_xs != blank -%}
+          <div class="mobile-title">
+            <h1 class="{{ block.settings.title_size_xs }}" style="color: {{ block.settings.color_title_xs }}; font-weight: {{ block.settings.title_font_weight_xs }};">{{ block.settings.title_xs | escape }}</h1>
+          </div>
+          {%- endif -%}
+          
+          {%- if block.settings.text != blank -%}
+          <div class="desktop-body">
+          	{{ block.settings.text }}
+          </div>
+          {%- endif -%}
+          
+          {%- if block.settings.text_xs != blank -%}
+          <div class="mobile-body">
+          	{{ block.settings.text_xs }}
+          </div>
+          {%- endif -%}
+          
+          {%- if block.settings.button_label != blank and block.settings.button_link != blank -%}
+            {%- capture ariaLabel -%}
+              {{- block.settings.button_label -}}
+              {%- if block.settings.button_link.type == 'frontpage_link' -%}
+                : {{ 'homepage.general.title' | t -}}
+              {%- elsif block.settings.button_link.type == 'catalog_link' -%}
+                : {{ 'collections.catalog.title' | t -}}
+              {%- elsif block.settings.button_link.object.title -%}
+                : {{ block.settings.button_link.object.title -}}
+              {%- endif -%}
+            {%- endcapture -%}
+
+            <a href="{{ block.settings.button_link }}"
+              class="btn"
+              aria-label="{{ ariaLabel }}">
+              {{- block.settings.button_label | escape -}}
+            </a>
+          {%- endif -%}
+		  
+      </div>
+  	</div>
+</div>
+
