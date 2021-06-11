@@ -47,11 +47,13 @@
   // Override default values of shop.strings for each template.
   // Alternate product templates can change values of
   // add to cart button, sold out, and unavailable states here.
+  /*
   theme.productStrings = {
     addToCart: {{ 'products.product.add_to_cart' | t | json }},
     soldOut: {{ 'products.product.sold_out' | t | json }},
     unavailable: {{ 'products.product.unavailable' | t | json }}
   }
+  */
 </script>
 
 
@@ -92,7 +94,7 @@
 }
 </script>
 
-<script>
-console.log('product', {{current_variant|json}})
-</script>
+{% comment %}
+<script>console.log('product', {{current_variant|json}})</script>
+{% endcomment %}
 

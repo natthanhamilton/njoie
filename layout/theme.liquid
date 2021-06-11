@@ -1,28 +1,6 @@
-{% capture content_for_top_body %}
-  <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TH26VWF" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End Google Tag Manager (noscript) -->
-
-  <a class="in-page-link visually-hidden skip-link" href="#MainContent">{{ 'general.accessibility.skip_to_content' | t }}</a>
-
-  {%- if settings.enable_ajax -%}{% include 'cart-popup' %}{%- endif -%}
-{% endcapture %}
-
-{% content_for_bottom_body %}
-  <ul hidden>
-    <li id="a11y-refresh-page-message">{{ 'general.accessibility.refresh_page' | t }}</li>
-    <li id="a11y-selection-message">{{ 'general.accessibility.selection_help' | t }}</li>
-  </ul>
-
-  <!-- Start of njoie Zendesk Widget script
-  <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=61998ab3-be45-4a9a-840c-f190992e0769"> </script>
-  End of njoie Zendesk Widget script -->
- 
- {% include 'smile-initializer' %}
-  <script src="https://cdn.attn.tv/njoie/dtag.js"></script>
-{% endcapture %}
-
-{% capture header_content %}
+<!doctype html>
+<html class="no-js" lang="{{ shop.locale }}">
+<head>
   <meta charset="utf-8">
   <meta name="facebook-domain-verification" content="xfmb7cum2dc6amg455soj7n3duf9t6" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -64,83 +42,14 @@
   <!-- STYLES -->
   {{ 'theme.scss.css' | asset_url | stylesheet_tag }}
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
-
-  <!-- SCRIPTS: in header for third party loading issues -->
-  <script>
-    var theme = {
-      breakpoints: {
-        medium: 750,
-        large: 990,
-        widescreen: 1400
-      },
-      strings: {
-        addToCart: {{ 'products.product.add_to_cart' | t | json }},
-        soldOut: {{ 'products.product.sold_out' | t | json }},
-        unavailable: {{ 'products.product.unavailable' | t | json }},
-        regularPrice: {{ 'products.product.regular_price' | t | json }},
-        salePrice: {{ 'products.product.sale_price' | t | json }},
-        sale: {{ 'products.product.on_sale' | t | json }},
-        fromLowestPrice: {{ 'products.product.from_lowest_price_html' | t: lowest_price: '[price]' | json }},
-        vendor: {{'products.product.vendor' | t | json }},
-        showMore: {{ 'general.filters.show_more' | t | json }},
-        showLess: {{ 'general.filters.show_less' | t | json }},
-        searchFor: {{ 'general.search.search_for' | t | json }},
-        addressError: {{ 'sections.map.address_error' | t | json }},
-        addressNoResults: {{ 'sections.map.address_no_results' | t | json }},
-        addressQueryLimit: {{ 'sections.map.address_query_limit_html' | t | json }},
-        authError: {{ 'sections.map.auth_error_html' | t | json }},
-        newWindow: {{ 'general.accessibility.link_messages.new_window' | t | json }},
-        external: {{ 'general.accessibility.link_messages.external' | t | json }},
-        newWindowExternal: {{ 'general.accessibility.link_messages.new_window_and_external' | t | json }},
-        removeLabel: {{ 'cart.label.remove' | t: product: '[product]' | json }},
-        update: {{ 'cart.label.update' | t | json }},
-        quantity: {{ 'cart.label.quantity' | t | json }},
-        discountedTotal: {{ 'cart.label.discounted_total' | t | json }},
-        regularTotal: {{ 'cart.label.regular_total' | t | json }},
-        priceColumn: {{ 'cart.label.price_column' | t | json }},
-        quantityMinimumMessage: {{ 'products.product.quantity_minimum_message' | t | json }},
-        cartError: {{ 'cart.general.cart_error' | t | json }},
-        removedItemMessage: {{ 'cart.general.removed_item_html' | t: quantity: '[quantity]', link: '[link]' | json }},
-        unitPrice: {{ 'products.product.unit_price_label' | t | json }},
-        unitPriceSeparator: {{ 'general.accessibility.unit_price_separator' | t | json }},
-        oneCartCount: {{ 'cart.popup.cart_count' | t: count: 1 | json }},
-        otherCartCount: {{ 'cart.popup.cart_count' | t: count: '[count]' | json }},
-        quantityLabel: {{ 'cart.popup.quantity_label' | t: quantity_count: '[count]' | json }},
-        products: {{ 'general.search.products' | t | json }},
-        loading: {{ 'general.search.loading' | t | json }},
-        number_of_results: {{ 'general.search.number_of_results' | t: result_number: '[result_number]', results_count: '[results_count]' | json }},
-        number_of_results_found: {{ 'general.search.number_of_results_found' | t: results_count: '[results_count]' | json }},
-        one_result_found: {{ 'general.search.one_result_found' | t | json }}
-      },
-      moneyFormat: {{ shop.money_format | json }},
-      moneyFormatWithCurrency: {{ shop.money_with_currency_format | json }},
-      settings: {
-        predictiveSearchEnabled: {{ settings.predictive_search_enabled | json }},
-        predictiveSearchShowPrice: {{ settings.predictive_search_show_price | json }},
-        predictiveSearchShowVendor: {{ settings.predictive_search_show_vendor | json }}
-      }
-    }
-    document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
-  </script>
-  {%- if request.page_type contains 'customers/' -%}<script src="{{ 'shopify_common.js' | shopify_asset_url }}"></script>{%- endif -%}
-  <script src="{{ 'lazysizes.js' | asset_url }}"></script>
-  <script src="{{ 'vendor.js' | asset_url }}"></script>
-  <script src="{{ 'theme.js' | asset_url }}"></script>
-  <script src="{{ 'custom.js' | asset_url }}"></script>
-  <script type="text/javascript">
-  (function e(){var e=document.createElement("script");e.type="text/javascript",e.async=true,e.src="//staticw2.yotpo.com/PRoSvzxfHr2Ua5skMTDBLZfYeMnx8JnZX34pY1sM/widget.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();
-  </script>
-{% endcapture %}
-
-<!doctype html>
-<html class="no-js" lang="{{ shop.locale }}">
-<head>
-  {{ header_content }}
+  
   {{ content_for_header }}
 </head>
 
 <body class="template-{{ request.page_type | handle }}">
-  {{ content_for_top_body }}
+  <a class="in-page-link visually-hidden skip-link" href="#MainContent">{{ 'general.accessibility.skip_to_content' | t }}</a>
+
+  {%- if settings.enable_ajax -%}{% include 'cart-popup' %}{%- endif -%}
   {% section 'header' %}
 
   <div class="page-container" id="PageContainer">
@@ -155,6 +64,11 @@
     {% section 'footer' %}
   </div>
 
-  {{ content_for_bottom_body }}
+  <ul hidden>
+    <li id="a11y-refresh-page-message">{{ 'general.accessibility.refresh_page' | t }}</li>
+    <li id="a11y-selection-message">{{ 'general.accessibility.selection_help' | t }}</li>
+  </ul>
+
+  {% include 'theme-scripts' %}
 </body>
 </html>
