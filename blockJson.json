@@ -7,6 +7,10 @@
 			"name": "Reviews"
 		},
 		{
+			"type": "pixlee",
+			"name": "Pixlee"
+		},
+		{
 			"type": "cta",
 			"name": "Call To Action",
 			"settings": [

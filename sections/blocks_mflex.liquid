@@ -2,6 +2,8 @@
 	{% case block.type %}
 		{% when 'reviews' %}
 			{% include 'block_reviews' %}
+		{% when 'pixlee' %}
+			{% include 'block_pixlee' %}
 		{% when 'content_image_split' %}
 			{% include 'block_content-image-split' %}
 		{% when 'hero' %}
@@ -35,6 +37,10 @@
 		{
 			"type": "reviews",
 			"name": "Reviews"
+		},
+		{
+			"type": "pixlee",
+			"name": "Pixlee"
 		},
 		{
 			"type": "cta",

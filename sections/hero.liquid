@@ -159,40 +159,54 @@
       </noscript>
     </div>
   {%- else -%}
-    <div class="background-image hero hero--{{ section.settings.hero_size }} hero-{{ section.id }} box ratio-container lazyload js"
-         id="Hero-{{ section.id }}"
-         data-layout="{{ section.settings.hero_layout }}"
-         {%- if section.settings.image -%}
-          {% unless section.settings.image.alt == blank %}
-          role="img"
-          aria-label="{{ section.settings.image.alt | escape }}"
-          data-alt="{{ section.settings.image.alt | escape }}"
-          {% endunless %}
-         data-bg="{{ section.settings.image | img_url: '300x300' }}"
-         data-bgset="{% include 'bgset', image: section.settings.image %}"
-         data-sizes="auto"
-         data-parent-fit="cover"
-         style="background-position: {{ section.settings.alignment }}; background-image: url('{{ section.settings.image | img_url: '300x300' }});"
-         {%- endif -%}
-         >
+
+        {% if section.settings.isBackground %}
+			<div class="background-image hero hero--{{ section.settings.hero_size }} hero-{{ section.id }} box ratio-container lazyload js"
+				id="Hero-{{ section.id }}"
+				data-layout="{{ section.settings.hero_layout }}"
+				{%- if section.settings.image -%}
+				{% unless section.settings.image.alt == blank %}
+				role="img"
+				aria-label="{{ section.settings.image.alt | escape }}"
+				data-alt="{{ section.settings.image.alt | escape }}"
+				{% endunless %}
+				data-bg="{{ section.settings.image | img_url: '300x300' }}"
+				data-bgset="{% include 'bgset', image: section.settings.image %}"
+				data-sizes="auto"
+				data-parent-fit="cover"
+				style="background-position: {{ section.settings.alignment }}; background-image: url('{{ section.settings.image | img_url: '300x300' }});"
+				{%- endif -%}
+				>
+			<div class="hero__inner">
+				<div class="desktop-content-container">
+					{{ renderContent }}
+				</div>
+			</div>
+        {% else %}
+          <img id="{{ img_id }}"
+                class="lazyload js"
+                src="{{ section.settings.image | img_url: '2000x' }}"
+                data-src="{{ img_url }}"
+                data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+                data-aspectratio="{{ section.settings.image.aspect_ratio }}"
+                data-sizes="auto"
+                alt="{{ section.settings.image.alt | escape }}">
+        {% endif %}
       
     {%- if section.settings.image == blank -%}
       <div class="placeholder-background">
         {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
       </div>
     {%- endif -%}
-      
-      <div class="hero__inner desktop-content-container">
-	  	{{ renderContent }}
-      </div>
     </div>
       
+	<div class="mobile-content-container">
+		{{ renderContent }}
+	</div>
+	
     <noscript>
       <div class="hero hero--{{ section.settings.hero_size }}"{% if section.settings.image %}{% unless section.settings.image.alt == blank %} role="img" aria-label="{{ section.settings.image.alt | escape }}"{% endunless %} style="background-image: url('{{ section.settings.image | img_url: '2048x' }}'); background-position: center {{ section.settings.alignment }};"{% endif %}></div>
     </noscript>
-	<div class="hero__inner mobile-content-container">
-		{{ renderContent }}
-	</div>
   {%- endif -%}
       
   {%- if section.settings.hero_layout == 'fixed_width' -%}
@@ -213,6 +227,12 @@
 			"type": "image_picker",
 			"id": "image",
 			"label": "Image"
+		},
+		{
+			"type": "checkbox",
+			"id": "isBackground",
+			"label": "Background Image?",
+			"info": "The image will render as a background image."
 		},
 		{
 			"type": "select",
