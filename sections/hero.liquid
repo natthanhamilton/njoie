@@ -55,53 +55,53 @@
 </style>
 
 {% capture renderContent %}
-<div class="page-width text-{{ section.settings.text_alignment }}">
-	<div>
-	{%- if section.settings.title != blank -%}
-	<div class="desktop-title">
-	<h1 class="{{ section.settings.title_size }}" style="color: {{ section.settings.color_title }}">{{ section.settings.title | escape }}</h1>
-	</div>
-	{%- endif -%}
-	
-	{%- if section.settings.title_xs != blank -%}
-	<div class="mobile-title">
-	<h1 class="{{ section.settings.title_size_xs }}" style="color: {{ section.settings.color_title_xs }}">{{ section.settings.title_xs | escape }}</h1>
-	</div>
-	{%- endif -%}
-	
-	{%- if section.settings.text != blank -%}
-	<div class="desktop-body">
-	{{ section.settings.text }}
-	</div>
-	{%- endif -%}
-	
-	{%- if section.settings.text_xs != blank -%}
-	<div class="mobile-body">
-	{{ section.settings.text_xs }}
-	</div>
-	{%- endif -%}
-	
-	{%- if section.settings.button_label != blank and section.settings.button_link != blank -%}
-	{%- capture ariaLabel -%}
-		{{- section.settings.button_label -}}
-		{%- if section.settings.button_link.type == 'frontpage_link' -%}
-		: {{ 'homepage.general.title' | t -}}
-		{%- elsif section.settings.button_link.type == 'catalog_link' -%}
-		: {{ 'collections.catalog.title' | t -}}
-		{%- elsif section.settings.button_link.object.title -%}
-		: {{ section.settings.button_link.object.title -}}
+	<div class="page-width text-{{ section.settings.text_alignment }}">
+		<div>
+		{%- if section.settings.title != blank -%}
+		<div class="desktop-title">
+		<h1 class="{{ section.settings.title_size }}" style="color: {{ section.settings.color_title }}">{{ section.settings.title | escape }}</h1>
+		</div>
 		{%- endif -%}
-	{%- endcapture -%}
+		
+		{%- if section.settings.title_xs != blank -%}
+		<div class="mobile-title">
+		<h1 class="{{ section.settings.title_size_xs }}" style="color: {{ section.settings.color_title_xs }}">{{ section.settings.title_xs | escape }}</h1>
+		</div>
+		{%- endif -%}
+		
+		{%- if section.settings.text != blank -%}
+		<div class="desktop-body">
+		{{ section.settings.text }}
+		</div>
+		{%- endif -%}
+		
+		{%- if section.settings.text_xs != blank -%}
+		<div class="mobile-body">
+		{{ section.settings.text_xs }}
+		</div>
+		{%- endif -%}
+		
+		{%- if section.settings.button_label != blank and section.settings.button_link != blank -%}
+		{%- capture ariaLabel -%}
+			{{- section.settings.button_label -}}
+			{%- if section.settings.button_link.type == 'frontpage_link' -%}
+			: {{ 'homepage.general.title' | t -}}
+			{%- elsif section.settings.button_link.type == 'catalog_link' -%}
+			: {{ 'collections.catalog.title' | t -}}
+			{%- elsif section.settings.button_link.object.title -%}
+			: {{ section.settings.button_link.object.title -}}
+			{%- endif -%}
+		{%- endcapture -%}
 
-	<a href="{{ section.settings.button_link }}"
-		class="btn {{ section.settings.button_theme }}"
-		style="margin-top: 27.5px;"
-		aria-label="{{ ariaLabel }}">
-		{{- section.settings.button_label | escape -}}
-	</a>
-	{%- endif -%}
+		<a href="{{ section.settings.button_link }}"
+			class="btn {{ section.settings.button_theme }}"
+			style="margin-top: 27.5px;"
+			aria-label="{{ ariaLabel }}">
+			{{- section.settings.button_label | escape -}}
+		</a>
+		{%- endif -%}
+		</div>
 	</div>
-</div>
 {% endcapture %}
 
 <div id="section-{{ section.id }}" data-section-id="{{ section.id }}" data-section-type="hero-section">
@@ -177,9 +177,10 @@
 				style="background-position: {{ section.settings.alignment }}; background-image: url('{{ section.settings.image | img_url: '300x300' }});"
 				{%- endif -%}
 				>
-			<div class="hero__inner">
-				<div class="desktop-content-container">
-					{{ renderContent }}
+				<div class="hero__inner">
+					<div class="desktop-content-container">
+						{{ renderContent }}
+					</div>
 				</div>
 			</div>
         {% else %}
@@ -198,11 +199,8 @@
         {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
       </div>
     {%- endif -%}
-    </div>
       
-	<div class="mobile-content-container">
-		{{ renderContent }}
-	</div>
+	<div class="mobile-content-container">{{ renderContent }}</div>
 	
     <noscript>
       <div class="hero hero--{{ section.settings.hero_size }}"{% if section.settings.image %}{% unless section.settings.image.alt == blank %} role="img" aria-label="{{ section.settings.image.alt | escape }}"{% endunless %} style="background-image: url('{{ section.settings.image | img_url: '2048x' }}'); background-position: center {{ section.settings.alignment }};"{% endif %}></div>

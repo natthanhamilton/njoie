@@ -8,7 +8,14 @@
 		},
 		{
 			"type": "pixlee",
-			"name": "Pixlee"
+			"name": "Pixlee",
+			"settings": [
+				{
+					"type": "text",
+					"id": "widgetId",
+					"label": "Widget ID"
+				}
+			]
 		},
 		{
 			"type": "cta",

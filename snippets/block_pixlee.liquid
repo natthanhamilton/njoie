@@ -2,8 +2,12 @@
   #block-{{ block.id }} { margin: 6rem 0; }
 </style>
 
-{%- assign current_variant = product.selected_or_first_available_variant -%}
-
-<div id="block-{{ block.id }}" data-block-id="{{ block.id }}">
-<div id="pixlee_container"></div><script type="text/javascript">window.PixleeAsyncInit = function() {Pixlee.init({apiKey:'6vqUx0FFLCzSrNq3Lwc7'});Pixlee.addSimpleWidget({widgetId:3058506});};</script><script src="https://assets.pxlecdn.com/assets/pixlee_widget_1_0_0.js"></script>
-</div>
+{%- if block.settings.widgetId != blank -%}
+  <div id="block-{{ block.id }}" data-block-id="{{ block.id }}">
+    <div id="pixlee_container"></div>
+  </div>
+  <script type="text/javascript">
+  window.PixleeAsyncInit = function() {Pixlee.init({apiKey:'6vqUx0FFLCzSrNq3Lwc7'});Pixlee.addSimpleWidget({widgetId: {{ block.settings.widgetId }} });};
+  </script>
+  <script src="https://assets.pxlecdn.com/assets/pixlee_widget_1_0_0.js"></script>
+{% endif %}
